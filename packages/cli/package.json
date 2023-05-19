@@ -1,0 +1,58 @@
+{
+  "name": "@freakyfelt/yarpc-cli",
+  "version": "1.0.0",
+  "description": "Yet Another RPC framework CLI",
+  "keywords": [],
+  "author": {
+    "name": "Bruce Felt",
+    "url": "https://github.com/freakyfelt/yarpc"
+  },
+  "contributors": [],
+  "homepage": "https://github.com/freakyfelt/cli",
+  "bugs": "https://github.com/freakyfelt/cli/issues",
+  "repository": "https://github.com/freakyfelt/cli",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup-node src/index.ts",
+    "ci": "npm run test && npm run build",
+    "clean": "rm -rf dist",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint:code",
+    "lint:code": "eslint . --cache --fix --ext .ts",
+    "pretest": "npm run lint && tsc --noEmit",
+    "test": "node --loader ts-node/esm --test src/index.test.ts",
+    "posttest": "npm run format"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.4",
+    "@types/node": "^16.18.31",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "eslint": "^8.40.0",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "ts-node": "^10.9.1",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --cache --fix"
+  }
+}

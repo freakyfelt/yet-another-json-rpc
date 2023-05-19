@@ -1,0 +1,14 @@
+.eslintcache
+node_modules/
+.DS_Store
+Thumbs.db
+.idea/
+.nyc_output/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.log
+yarn.lock
+pnpm-lock.yaml
+coverage/
+dist/
