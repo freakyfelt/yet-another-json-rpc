@@ -36,7 +36,7 @@
     "lint": "npm run lint:code",
     "lint:code": "eslint . --cache --fix --ext .ts",
     "pretest": "npm run lint && tsc --noEmit",
-    "test": "node --loader ts-node/esm --test src/index.test.ts",
+    "test": "node --loader ts-node/esm --test src/*.test.ts",
     "posttest": "npm run format"
   },
   "devDependencies": {

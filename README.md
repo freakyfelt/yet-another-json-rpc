@@ -215,19 +215,16 @@ builder.mutation('modifyWidget', {
   path: '/v1/users/{userId}/widgets/{widgetId}',
 
   request: {
-    schema: builder.schemas.ref('ModifyWidgetInput'),
+    schema: 'ModifyWidgetInput',
     parameters: {
       userId: { in: 'path', description: 'ID of the owning user of the widget' },
       widgetId: { in: 'path' },
     }
   }
   response: {
-    schema: builder.schema.ref('Widget'),
+    schema: 'Widget',
   },
-  errors: [
-    builder.components.ref({ responses: 'BadRequest' }),
-    builder.components.ref({ responses: 'NotFound' }),
-  ]
+  errors: ['BadRequest', 'NotFound'],
 })
 ```
 
@@ -249,7 +246,7 @@ paths:
       requestBody:
         application/json:
           // note the `Body` label appended to the end
-          spec: { $ref: '#/components/schemas/ModifyWidgetInputBody' }
+          schema: { $ref: '#/components/schemas/ModifyWidgetInputBody' }
 ```
 
 > **Note**
