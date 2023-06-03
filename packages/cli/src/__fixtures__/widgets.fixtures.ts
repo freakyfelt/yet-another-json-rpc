@@ -8,13 +8,26 @@ import {
 const withoutSymbols = <T extends object>(obj: T): T =>
 	JSON.parse(JSON.stringify(obj)) as T;
 
+const UserID = Type.String({
+	$id: "#/components/schemas/UserID",
+	description: "The user's ID",
+});
+const WidgetID = Type.String({
+	$id: "#/components/schemas/WidgetID",
+	description: "The widget's ID",
+});
+const WidgetStatus = Type.Union(
+	[Type.Literal("ACTIVE"), Type.Literal("INACTIVE")],
+	{ $id: "#/components/schemas/WidgetStatus" }
+);
+
 const Widget = Type.Object(
 	{
-		id: Type.String(),
-		userId: Type.String(),
-		status: Type.String(),
+		id: Type.Ref(WidgetID),
+		userId: Type.Ref(UserID),
+		status: Type.Ref(WidgetStatus),
 	},
-	{ $id: "Widget" }
+	{ $id: "#/components/schemas/Widget" }
 );
 
 const createWidget: MutationOperationObject = {
@@ -36,10 +49,7 @@ const createWidget: MutationOperationObject = {
 	},
 };
 
-const CreateWidgetInput = Type.Object({
-	userId: Type.String(),
-	status: Type.String(),
-});
+const CreateWidgetInput = Type.Pick(Widget, ["userId", "status"]);
 
 const listUserWidgets: QueryOperationObject = {
 	description: "List widgets for a user",
@@ -61,8 +71,8 @@ const listUserWidgets: QueryOperationObject = {
 };
 
 const ListUserWidgetsInput = Type.Object({
-	userId: Type.String(),
-	status: Type.Optional(Type.String()),
+	userId: Type.Ref(UserID),
+	status: Type.Optional(Type.Array(Type.Ref(WidgetStatus))),
 	limit: Type.Optional(Type.Integer()),
 });
 
@@ -79,13 +89,18 @@ export const operations = {
 	listUserWidgets,
 };
 
+export const schemas = withoutSymbols({
+	UserID,
+	WidgetID,
+	WidgetStatus,
+	Widget,
+	CreateWidgetInput,
+	ListUserWidgetsInput,
+	ListWidgetsOutput,
+});
+
 export const components: ComponentsObject = {
-	schemas: withoutSymbols({
-		CreateWidgetInput,
-		ListUserWidgetsInput,
-		ListWidgetsOutput,
-		Widget,
-	}),
+	schemas,
 	responses: {
 		BadRequest: {
 			description: "Bad request",

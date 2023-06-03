@@ -126,20 +126,21 @@ export class OperationTransformer {
 			"Query input schema must be an object"
 		);
 
-		const schema = isReferenceObject(schemaOrRef)
+		const inputSchema = isReferenceObject(schemaOrRef)
 			? await this.resolver.resolve(schemaOrRef)
 			: schemaOrRef;
 		assertObjectTypeSchema(
-			schema,
+			inputSchema,
 			"Query input schema must be an object type with properties"
 		);
 
 		// @todo support parameter overrides object
 
-		return Object.entries(schema.properties).map(([name, schema]) => ({
+		return Object.entries(inputSchema.properties).map(([name, schema]) => ({
 			name,
 			in: "query",
 			schema,
+			...(inputSchema?.required?.includes(name) ? { required: true } : {}),
 		})) as ParameterObject[];
 	}
 
