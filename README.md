@@ -242,7 +242,7 @@ paths:
         - name: widgetId
           in: query
           schema:
-            $ref: #/components/schemas/GetWidgetInput/properties/widgetId
+            $ref: '#/components/schemas/GetWidgetInput/properties/widgetId'
           required: true
       responses:
         200:
@@ -278,7 +278,7 @@ The goal of the builder is to be a lightweight abstraction on top of OpenAPI, in
 You can use the keywords `method` and `path` to override the default HTTP method and resulting path respectively. You can even specify path parameters, though you will then need to override the parameters mappings.
 
 > **Note**
-> The YARPC operations can happily live alongside your standard `paths` object for OpenAPI
+> The YARPC operations can happily live alongside your standard [`paths` object][oas:paths-object] in an OpenAPI spec
 
 For example, you may want to make a RESTful `modifyWidget` route that modifies a widget owned by a user in a RESTful manner:
 
@@ -363,3 +363,4 @@ MIT License, see the included [License.md](License.md) file.
 [oas:mediaType-object]: https://spec.openapis.org/oas/v3.1.0#mediaTypeObject
 [oas:response-object]: https://spec.openapis.org/oas/v3.1.0#response-object
 [oas:parameter-object]: https://spec.openapis.org/oas/v3.1.0#parameter-object
+[oas:paths-object]: https://spec.openapis.org/oas/v3.1.0#paths-object
