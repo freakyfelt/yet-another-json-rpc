@@ -19,5 +19,8 @@
     "@typescript-eslint/parser": "^5.59.6",
     "eslint": "^8.40.0",
     "openapi-types": "^12.1.0"
+  },
+  "dependencies": {
+    "just-intersect": "^4.3.0"
   }
 }

@@ -1,6 +1,12 @@
+import intersect from "just-intersect";
 import { OperationTransformer } from "./operation-transformer.js";
 import { getDefaultResolver } from "./resolver.js";
-import { OASDocument, RPCDocument } from "./types/index.js";
+import {
+	Logger,
+	OASDocument,
+	PathsObject,
+	RPCDocument,
+} from "./types/index.js";
 
 /**
  * Transforms an RPC document into an OAS document
@@ -8,16 +14,18 @@ import { OASDocument, RPCDocument } from "./types/index.js";
 export class DocumentTransformer {
 	private doc: RPCDocument;
 	private transformer: OperationTransformer;
+	private logger: Logger;
 
 	constructor(doc: RPCDocument) {
 		this.doc = doc;
 		this.transformer = new OperationTransformer({
 			resolver: getDefaultResolver(doc),
 		});
+		this.logger = console;
 	}
 
 	async transform(): Promise<OASDocument> {
-		const { info, paths: oasPaths, operations, yarpc, ...rest } = this.doc;
+		const { info, paths: oasPaths = {}, operations, yarpc, ...rest } = this.doc;
 
 		if (typeof yarpc !== "string") {
 			throw new Error("Missing required yarpc version");
@@ -27,23 +35,20 @@ export class DocumentTransformer {
 			throw new Error(`Unsupported YARPC version: ${String(yarpc)}`);
 		}
 
-		const paths = await this.rpcToPaths(operations);
+		const rpcPaths = await this.rpcToPaths(operations);
+
+		const paths = this.deepMergePaths(oasPaths, rpcPaths);
 
 		return {
 			openapi: "3.1.0",
 			info,
-			paths: {
-				...oasPaths,
-				...paths,
-			},
+			paths,
 			...rest,
 		};
 	}
 
-	async rpcToPaths(
-		rpc: RPCDocument["operations"]
-	): Promise<OASDocument["paths"]> {
-		const paths: OASDocument["paths"] = {};
+	async rpcToPaths(rpc: RPCDocument["operations"]): Promise<PathsObject> {
+		const paths: PathsObject = {};
 
 		for (const [operationId, operation] of Object.entries(rpc.queries)) {
 			paths[`/queries/${operationId}`] = {
@@ -64,5 +69,38 @@ export class DocumentTransformer {
 		}
 
 		return paths;
+	}
+
+	deepMergePaths(paths: PathsObject, otherPaths: PathsObject): PathsObject {
+		const mergedPaths: PathsObject = {
+			...paths,
+		};
+
+		Object.entries(otherPaths).forEach(([path, httpOperations]) => {
+			// case 1: non-overlapping paths
+			if (typeof mergedPaths[path] === "undefined") {
+				mergedPaths[path] = httpOperations;
+				return;
+			}
+
+			// detect and report overlapping path+method
+			const duplicate = intersect(
+				Object.keys(httpOperations),
+				Object.keys(mergedPaths[path])
+			);
+			if (duplicate.length > 0) {
+				this.logger.warn(
+					{ path, duplicate },
+					"Duplicate operation(s) will be overwritten"
+				);
+			}
+
+			mergedPaths[path] = {
+				...mergedPaths[path],
+				...httpOperations,
+			};
+		});
+
+		return mergedPaths;
 	}
 }

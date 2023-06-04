@@ -119,7 +119,7 @@ export const mutations = {
 	createWidget,
 };
 
-export const paths = {
+export const widgetPaths = {
 	"/mutations/createWidget": {
 		post: createWidgetOAS,
 	},

@@ -3,8 +3,8 @@ import test from "node:test";
 import {
 	components,
 	mutations,
-	paths,
 	queries,
+	widgetPaths,
 } from "./__fixtures__/widgets.fixtures.js";
 import { DocumentTransformer } from "./document-transformer.js";
 import { OASDocument, RPCDocument } from "./types";
@@ -19,6 +19,23 @@ const healthCheck = {
 					description: "OK",
 				},
 			},
+		},
+	},
+};
+
+const conflictingPathName = Object.keys(
+	widgetPaths
+)[0] as keyof typeof widgetPaths;
+const conflictingPathMethod = Object.keys(widgetPaths[conflictingPathName])[0];
+
+const conflictingPathOperation = {
+	operationId: "conflictingPathOperation",
+	responses: {
+		200: {
+			description: "OK",
+		},
+		409: {
+			description: "CONFLICT",
 		},
 	},
 };
@@ -44,7 +61,7 @@ const oasDocument: OASDocument = {
 	info: rpcDocument.info,
 	paths: {
 		...healthCheck,
-		...paths,
+		...widgetPaths,
 	},
 	components: rpcDocument.components,
 };
@@ -53,6 +70,73 @@ const transformer = new DocumentTransformer(rpcDocument);
 
 test("DocumentTransformer#transform", async (t) => {
 	await t.test("transforms an RPC document into an OAS document", async () => {
+		const actual = await transformer.transform();
+		assert.deepStrictEqual(actual, oasDocument);
+	});
+
+	await t.test("throws an error if the YARPC version is missing", async () => {
+		const doc = { ...rpcDocument };
+		// @ts-expect-error Missing required yarpc version
+		delete doc.yarpc;
+		const transformer = new DocumentTransformer(doc);
+		await assert.rejects(transformer.transform(), {
+			message: "Missing required yarpc version",
+		});
+	});
+
+	await t.test(
+		"throws an error if the YARPC version is not supported",
+		async () => {
+			const doc = { ...rpcDocument };
+			// @ts-expect-error incorrect yarpc version
+			doc.yarpc = "2.0.0";
+			const transformer = new DocumentTransformer(doc);
+			await assert.rejects(transformer.transform(), {
+				message: "Unsupported YARPC version: 2.0.0",
+			});
+		}
+	);
+
+	await t.test("merge same path different HTTP method", async () => {
+		const doc = {
+			...rpcDocument,
+			paths: {
+				...rpcDocument.paths,
+				[conflictingPathName]: {
+					patch: conflictingPathOperation,
+				},
+			},
+		};
+
+		const expected = {
+			...oasDocument,
+			paths: {
+				...oasDocument.paths,
+				[conflictingPathName]: {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					...oasDocument.paths![conflictingPathName],
+					patch: conflictingPathOperation,
+				},
+			},
+		};
+
+		const transformer = new DocumentTransformer(doc);
+		const actual = await transformer.transform();
+		assert.deepStrictEqual(actual, expected);
+	});
+
+	await t.test("merge same path+HTTP method", async () => {
+		const doc = {
+			...rpcDocument,
+			paths: {
+				...rpcDocument.paths,
+				[conflictingPathName]: {
+					[conflictingPathMethod]: conflictingPathOperation,
+				},
+			},
+		};
+
+		const transformer = new DocumentTransformer(doc);
 		const actual = await transformer.transform();
 		assert.deepStrictEqual(actual, oasDocument);
 	});

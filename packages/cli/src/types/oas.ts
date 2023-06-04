@@ -9,6 +9,7 @@ export type {
 	MediaTypeObject,
 	OperationObject,
 	ParameterObject,
+	PathsObject,
 	ReferenceObject,
 	ResponseObject,
 	ResponsesObject,
