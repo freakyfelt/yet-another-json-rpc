@@ -1,6 +1,15 @@
-# Yet Another RPC (YARPC) framework
+# Yet Another RPC (YARPC)
 
 YARPC aims to strike a balance between GraphQL's custom graph protocol and OpenAPI's HTTP-focused protocol to create a browser-compliant, OpenAPI-compatible RPC framework, providing you with all of the plugins and tools of your favorite HTTP framework and SDK generators without developers worrying about the things that don't matter for a JSON RPC-driven system.
+
+## Goals & Philosophy
+
+The goal of this library is **to be opinionated when it doesn't matter**, allowing developers to skip over the OpenAPI implementation details when they don't matter (in an SDK-driven RPC context) while still allowing for that complexity when needed.
+
+- Keep the focus on business operations, not HTTP semantics
+- Remove bike shedding on trivialities such as `PUT` vs `POST`, path formats and parameter locations, etc
+- Compile down to OpenAPI to reuse existing tooling
+- Draw from other RPC frameworks where it makes sense
 
 ## What is RPC?
 
@@ -8,31 +17,22 @@ Remote Procedure Calls (RPC) can mean a few different things depending on the co
 
 You can simplify this down to:
 
-- Operations can either be read only or some sort of change/mutation
-- Operations are identified by an operation identifier, such as `saveChanges`, `clone_widget`, `ListObjects`, etc.
+- Operations are usually either read only or cause some sort of change/mutation
+- Operations are identified by an operation identifier, such as `saveChanges`, `clone_widget`, `ListObjects`
 - Operations may have an input shape, an output shape, and some potential errors
 
 This is basically every interface definition language (IDL) that focuses on RPC--such as gRPC, SOAP, etc.-- follow.
 
-## Goals & Philosophy
-
-The goal of this library is **to be opinionated when it doesn't matter**, allowing developers to skip over the OpenAPI implementation details when they don't matter in an RPC context while still allowing for that complexity when needed.
-
-- Maintain low developer cognitive overhead
-- Remove bike shedding on trivialities
-- Compile down to OpenAPI
-- Draw from other RPC frameworks where it makes sense
-
 ## Design
 
-YARPC has two classes of API calls: queries and mutations.
+YARPC has two types of API calls: queries and mutations.
 
 - Queries are read-only operations that do not cause side effects.
-- Mutations are operations that may cause changes to happen on the remote service.
+- Mutations are operations that may cause side effects such as changing a record in a data store or sending a notification.
 
 There are three major components to making a YARPC service: input/output schemas, error responses, and the service definition.
 
-- Object schemas define the shapes of your inputs, outputs, and errors. Schemas are defined using standard JSON Schema syntax.
+- Object schemas define the shapes of your inputs, outputs, and errors. Schemas are defined using standard JSON Schema syntax
 - Error responses are standard [OpenAPI response objects][oas:response-object] with a description and an optional schema
 - Operations define the methods your RPC supports along with references to the input, output, and error shapes, plus any other OpenAPI-compatible operation overrides
 
@@ -40,57 +40,127 @@ There are three major components to making a YARPC service: input/output schemas
 
 Queries are read-only operations that consuming systems can call to fetch data, similar to any normal HTTP `GET` request. As with HTTP `GET` requests it's recommended to not have side effects and to optionally allow for caching.
 
-Requests have an optional `input` shape, an `output` shape, and a list of potential error responses.
+```yaml
+operations:
+  queries:
+    getWidget:
+      description: Gets the widget identified by the provided widgetId
+      input:
+        schema: { $ref: '#/components/schemas/GetWidgetInput' }
+      output:
+        schema: { $ref: '#/components/schemas/Widgets' }
+      errors:
+        401: { $ref: '#/components/responses/InvalidCredentials' }
+        403: { $ref: '#/components/responses/NotAuthorized' }
+        404: { $ref: '#/components/responses/NotFound' }
+```
+
+By default this will generate an OpenAPI path item under `/queries/${operationId}.get` with all inputs mapped to `query` parameters and the output mapped to an HTTP 200 response with a content type of `application/json`.
+
+<details>
+  <summary>Resulting OpenAPI path item definition</summary>
 
 ```yaml
-queries:
-  getWidget:
-    input:
-      schema: { $ref: '#/components/schemas/GetWidgetInput' }
-    output:
-      schema: { $ref: '#/components/schemas/Widgets' }
-    errors:
-      401: { $ref: '#/components/responses/InvalidCredentials' }
-      403: { $ref: '#/components/responses/NotAuthorized' }
-      404: { $ref: '#/components/responses/NotFound' }
+paths:
+  /queries/getWidget:
+    get:
+      operationId: getWidget
+      description: Gets the widget identified by the provided widgetId
+      parameters:
+        - name: widgetId
+          in: query
+          schema:
+            $ref: '#/components/schemas/GetWidgetInput/properties/widgetId'
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Widget' }
+        401: { $ref: '#/components/responses/InvalidCredentials' }
+        403: { $ref: '#/components/responses/NotAuthorized' }
+        404: { $ref: '#/components/responses/NotFound' }
 ```
+</details>
 
-By default all `query` operations will be turned into an [OpenAPI spec operation object][oas:operation-object] that responds to the following HTTP call:
+<details>
+  <summary open>Resulting example HTTP request</summary>
 
 ```text
-GET /queries/<operationId>?arg1=val1&...
-Content-Type: application/json
+> GET /queries/getWidget?widgetId=w-1a2b3c4d5e6f HTTP/1.1
+> Accept: application/json
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+{
+  "id": "w-1a2b3c4d5e6f",
+  "userId": "u-2b3c4d5e6f1a",
+  "status": "active",
+  "createdAt": "2023-01-02T03:04:05Z"
+}
 ```
-
-The result will be sent with an HTTP 200 (OK) with an `application/json` response payload.
+</details>
 
 ### Mutation operations
 
 Mutation operations are operations that may result in side effects, such as a change in one or more data stores or sending notifications to other systems for further processing.
 
 ```yaml
-mutations:
-  createWidget:
-    input:
-      schema: { $ref: '#/components/schemas/CreateWidgetInput' }
-    output:
-      schema: { $ref: '#/components/schemas/Widget' }
-    errors:
-      401: { $ref: '#/components/responses/InvalidCredentials' }
-      403: { $ref: '#/components/responses/NotAuthorized' }
-      422: { $ref: '#/components/responses/InvalidRequest' }
+operations:
+  mutations:
+    createWidget:
+      description: Creates the specified widget
+      input:
+        schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+      output:
+        schema: { $ref: '#/components/schemas/Widget' }
+      errors:
+        401: { $ref: '#/components/responses/InvalidCredentials' }
+        403: { $ref: '#/components/responses/NotAuthorized' }
+        422: { $ref: '#/components/responses/InvalidRequest' }
 ```
 
-By default all mutation operations will be turned into an OpenAPI spec operation that responds to the following HTTP call:
+By default this will generate an OpenAPI path item under `paths['/mutations/${operationId}'].post` with the input being mapped to the `application/json` content type for the `requestBody` and the output mapped to an HTTP 200 response with a content type of `application/json`.
+
+<details>
+  <summary>Resulting OpenAPI path item definition</summary>
+
+```yaml
+paths:
+  /mutations/createWidget:
+    post:
+      operationId: createWidget
+      description: Creates the specified widget
+      requestBody:
+        required: true
+        application/json:
+          schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Widget' }
+        401: { $ref: '#/components/responses/InvalidCredentials' }
+        403: { $ref: '#/components/responses/NotAuthorized' }
+        404: { $ref: '#/components/responses/NotFound' }
+```
+</details>
+
+<details>
+  <summary open>Resulting example HTTP request</summary>
 
 ```text
-POST /mutations/<operationId>
-Content-Type: application/json
+> POST /mutations/<operationId>
+> Accept: application/json
+< HTTP/1.1 200 OK
+< Content-Type: application/json
 
 {
   "arg1": "val1"
 }
 ```
+</details>
 
 ## Getting started
 
@@ -104,6 +174,18 @@ Next define your inputs, outputs, and errors using standard JSON Schema syntax a
 
 > **Note**
 > You might want to consider defining your JSON Schema shapes using libraries such as [@sinclair/typebox](https://www.npmjs.com/package/@sinclair/typebox) or [zod](https://www.npmjs.com/package/zod) to reduce the boilerplate of JSON Schema. In the end any OpenAPI spec is parsed as JSON, meaning using JavaScript/TypeScript can save time and headaches.
+
+Some notes:
+
+- The input schema MUST be an object if present
+- The output schema can be any JSON Schema
+- Errors should be defined as standard [OpenAPI responses][oas:response-object], usually with a content type of `application/json`
+
+> **Note**
+> **It is strongly recommended to use an outer `object` for your response schema**, even if you are returning an array (use an `items` key for example) so that you can extend it in the future (think pagination). That being said, the tooling won't stop you from using primitive schemas for the response.
+
+<details>
+  <summary>Example OpenAPI schema components</summary>
 
 ```yaml
 components:
@@ -156,21 +238,16 @@ components:
           type: object
           allowAdditionalProperties: true
 ```
-
-Some notes:
-
-- The input schema MUST be an object if present
-- The output schema can be any JSON Schema
-- Errors should be defined as standard [OpenAPI responses][oas:response-object], usually with a content type of `application/json`
-
-> **Note**
-> **It is strongly recommended to use an outer `object` for your response schema**, even if you are returning an array (use an `items` key for example) so that you can extend it in the future (think pagination). That being said, the tooling won't stop you from using primitive schemas for the response.
+</details>
 
 ### Define error responses
 
 Next create [OpenAPI response objects][oas:response-object] for any business logic errors your operations may "throw", such as the standard NotFound, NotAuthorized, etc for HTTP, but also potentially for other domain-specific errors.
 
 Just like in OpenAPI response shapes are usually included in the `components` section under a `responses` key
+
+<details>
+  <summary>Example OpenAPI response components</summary>
 
 ```yaml
 components:
@@ -202,10 +279,11 @@ components:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
 ```
+</details>
 
 ### Define operations
 
-Finally define your operations in YARPC's non-OpenAPI standard `queries` and `mutations` keys. You will need to come up with an operation ID (e.g. `getWidgets`, `cancelAccount`), the inputs, and the response shape for each operation.
+Finally define your operations under YARPC's non-OpenAPI standard `operations` key. Queries will live under the `queries` key and mutations under the `mutations` keys. You will need to come up with an operation ID (e.g. `getWidgets`, `cancelAccount`), the inputs, and the response shape for each operation.
 
 - The request shape will use the `object` schema specified by the `input` object for generating the OpenAPI inputs
   - For queries the shape specified for `input` will have its values mapped to an array of [parameter objects][oas:parameter-object] with an `in` value of `query`
@@ -216,92 +294,61 @@ Finally define your operations in YARPC's non-OpenAPI standard `queries` and `mu
 For example, here is a sample definition for a `getWidget` query operation:
 
 ```yaml
-queries:
-  getWidget:
-    description: Gets the widget identified by the provided widgetId
-    input:
-      schema: { $ref: '#/components/schemas/GetWidgetInput' }
-    output:
-      # the standard shape of a media type object
-      schema: { $ref: '#/components/schemas/Widget' }
-    errors:
-      401: { $ref: '#/components/schemas/InvalidCredentials' }
-      403: { $ref: '#/components/schemas/NotAuthorized' }
-      404: { $ref: '#/components/schemas/NotFound' }
-```
-
-The generated OpenAPI `paths` will look like this:
-
-```yaml
-paths:
-  /queries/getWidget:
-    get:
-      operationId: getWidget
+operations:
+  queries:
+    getWidget:
       description: Gets the widget identified by the provided widgetId
-      parameters:
-        - name: widgetId
-          in: query
-          schema:
-            $ref: '#/components/schemas/GetWidgetInput/properties/widgetId'
-          required: true
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Widget' }
-        401: { $ref: '#/components/responses/InvalidCredentials' }
-        403: { $ref: '#/components/responses/NotAuthorized' }
-        404: { $ref: '#/components/responses/NotFound' }
-```
-
-And the resulting HTTP request:
-
-```text
-> GET /queries/getWidget?widgetId=w-1a2b3c4d5e6f HTTP/1.1
-< HTTP/1.1 200 OK
-< Content-Type: application/json
-{
-  "id": "w-1a2b3c4d5e6f",
-  "userId": "u-2b3c4d5e6f1a",
-  "status": "active",
-  "createdAt": "2023-01-02T03:04:05Z"
-}
+      input:
+        schema: { $ref: '#/components/schemas/GetWidgetInput' }
+      output:
+        # the standard shape of a media type object
+        schema: { $ref: '#/components/schemas/Widget' }
+      errors:
+        401: { $ref: '#/components/schemas/InvalidCredentials' }
+        403: { $ref: '#/components/schemas/NotAuthorized' }
+        404: { $ref: '#/components/schemas/NotFound' }
 ```
 
 ## Customizations
 
 The goal of the builder is to be a lightweight abstraction on top of OpenAPI, injecting in defaults where it doesn't really matter for services vending an SDK. That being said, the builder does allow you to provide any OpenAPI 3.1 operation definitions you want.
 
-### Changing the HTTP method and URL
+### (TODO) Changing the HTTP method and URL
 
-You can use the keywords `method` and `path` to override the default HTTP method and resulting path respectively. You can even specify path parameters, though you will then need to override the parameters mappings.
+> **Warning**
+> This is not yet implemented
+
+By default parameters will end up in the default location (`query` for `query` operations and `requestBody` for `mutation` operations). You can use the keywords `method` and `path` to override the default HTTP method and resulting path respectively. You can even specify path parameters, though you will then need to override the parameters mappings.
 
 > **Note**
-> The YARPC operations can happily live alongside your standard [`paths` object][oas:paths-object] in an OpenAPI spec
+> The YARPC operations can happily live alongside your standard [`paths` object][oas:paths-object] in the specification. The library will merge the resulting paths objects.
 
 For example, you may want to make a RESTful `modifyWidget` route that modifies a widget owned by a user in a RESTful manner:
 
 ```yaml
-mutations:
-  modifyWidget:
-    description: Makes changes to the specified widget identified by the provided userId and widgetId
-    method: put
-    path: /v1/widgets/{widgetId}
+operations:
+  mutations:
+    modifyWidget:
+      description: Makes changes to the specified widget identified by the provided userId and widgetId
+      method: put
+      path: /v1/widgets/{widgetId}
 
-    input:
-      schema: { $ref: '#/components/schemas/ModifyWidgetInput' }
-      parameters:
-        widgetId:
-          in: path
-    output:
-      schema: { $ref: '#/components/schemas/Widget' }
-    errors:
-      400: { $ref: '#/components/responses/BadRequest' }
-      404: { $ref: '#/components/responses/NotFound' }
+      input:
+        schema: { $ref: '#/components/schemas/ModifyWidgetInput' }
+        parameters:
+          widgetId:
+            in: path
+      output:
+        schema: { $ref: '#/components/schemas/Widget' }
+      errors:
+        400: { $ref: '#/components/responses/BadRequest' }
+        404: { $ref: '#/components/responses/NotFound' }
 ```
 
 This will result in the following `paths` object:
+
+<details>
+  <summary>Resulting OpenAPI paths</summary>
 
 ```yaml
 paths:
@@ -317,9 +364,7 @@ paths:
           // note the `Body` label appended to the end
           schema: { $ref: '#/components/schemas/ModifyWidgetInputBody' }
 ```
-
-> **Note**
-> By default all parameters that are not overridden will end up in the default location (`query` for `query` operations and `requestBody` for `mutation` operations). This is to prevent confused parameters issues where some frameworks merge query and path into a single input.
+</details>
 
 ## Why not GraphQL?
 
