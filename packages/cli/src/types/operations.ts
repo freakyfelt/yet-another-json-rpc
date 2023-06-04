@@ -10,7 +10,7 @@ export type RPCParameterObject = Omit<OASParameterObject, "schema">;
 export interface RPCOutputObject extends MediaTypeObject {}
 
 export interface RPCOperationObject
-	extends Omit<OperationObject, "operationId" | "requestBody"> {
+	extends Omit<OperationObject, "operationId" | "requestBody" | "responses"> {
 	input?: MediaTypeObject;
 	/**
 	 * The response for the query operation

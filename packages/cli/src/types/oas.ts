@@ -1,4 +1,19 @@
-import type { OpenAPIV3_1 } from "openapi-types";
+import type {
+	ComponentsObject,
+	OpenAPIObject,
+	ReferenceObject,
+	SchemaObject,
+} from "openapi3-ts/oas31";
+export type {
+	ComponentsObject,
+	MediaTypeObject,
+	OperationObject,
+	ParameterObject,
+	ReferenceObject,
+	ResponseObject,
+	ResponsesObject,
+	SchemaObject,
+} from "openapi3-ts/oas31";
 
 export const HttpMethods = [
 	"get",
@@ -12,20 +27,11 @@ export const HttpMethods = [
 
 export type HttpMethod = (typeof HttpMethods)[number];
 
-export type MediaTypeObject = OpenAPIV3_1.MediaTypeObject;
-export type OperationObject = OpenAPIV3_1.OperationObject;
-export type ParameterObject = OpenAPIV3_1.ParameterObject;
-
-export type ReferenceObject = OpenAPIV3_1.ReferenceObject;
 export function isReferenceObject(
 	obj: ReferenceObject | SchemaObject
 ): obj is ReferenceObject {
 	return "$ref" in obj;
 }
-
-export type ResponseObject = OpenAPIV3_1.ResponseObject;
-export type ResponsesObject = OpenAPIV3_1.ResponsesObject;
-export type SchemaObject = OpenAPIV3_1.SchemaObject;
 
 export type ObjectTypeSchema = SchemaObject & {
 	type: "object";
@@ -46,11 +52,6 @@ export function assertObjectTypeSchema(
 
 export interface OASDocument<
 	TComponents extends ComponentsObject = ComponentsObject
-> extends Omit<OpenAPIV3_1.Document, "components"> {
+> extends Omit<OpenAPIObject, "components"> {
 	components: TComponents;
-}
-
-export interface ComponentsObject
-	extends Omit<OpenAPIV3_1.ComponentsObject, "schemas"> {
-	schemas: Record<string, SchemaObject>;
 }

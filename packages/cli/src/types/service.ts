@@ -6,7 +6,10 @@ import type {
 
 export interface RPCDocument<
 	TComponents extends ComponentsObject = ComponentsObject
-> extends OASDocument<TComponents> {
-	queries: Record<string, QueryOperationObject>;
-	mutations: Record<string, MutationOperationObject>;
+> extends Omit<OASDocument<TComponents>, "openapi"> {
+	yarpc: "1.0.0";
+	operations: {
+		queries: Record<string, QueryOperationObject>;
+		mutations: Record<string, MutationOperationObject>;
+	};
 }

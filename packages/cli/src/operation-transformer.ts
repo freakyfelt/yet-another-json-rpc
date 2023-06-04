@@ -1,24 +1,19 @@
 import assert from "node:assert";
+import { IResolver } from "./resolver.js";
 import {
 	OperationObject,
 	ParameterObject,
 	QueryInputObject,
 	QueryOperationObject,
 	RPCOutputObject,
-	ReferenceObject,
 	ResponseObject,
 	ResponsesObject,
-	SchemaObject,
 	assertObjectTypeSchema,
 	isReferenceObject,
 } from "./types/index.js";
 
 const DEFAULT_RESPONSE: ResponseObject = {
 	description: "OK",
-};
-
-type IResolver = {
-	resolve(ref: ReferenceObject): SchemaObject | PromiseLike<SchemaObject>;
 };
 
 type TransformerDeps = {

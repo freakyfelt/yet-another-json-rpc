@@ -1,34 +1,10 @@
-import { Type } from "@sinclair/typebox";
 import {
 	ComponentsObject,
 	MutationOperationObject,
+	OperationObject,
 	QueryOperationObject,
 } from "../types";
-
-const withoutSymbols = <T extends object>(obj: T): T =>
-	JSON.parse(JSON.stringify(obj)) as T;
-
-const UserID = Type.String({
-	$id: "#/components/schemas/UserID",
-	description: "The user's ID",
-});
-const WidgetID = Type.String({
-	$id: "#/components/schemas/WidgetID",
-	description: "The widget's ID",
-});
-const WidgetStatus = Type.Union(
-	[Type.Literal("ACTIVE"), Type.Literal("INACTIVE")],
-	{ $id: "#/components/schemas/WidgetStatus" }
-);
-
-const Widget = Type.Object(
-	{
-		id: Type.Ref(WidgetID),
-		userId: Type.Ref(UserID),
-		status: Type.Ref(WidgetStatus),
-	},
-	{ $id: "#/components/schemas/Widget" }
-);
+import { schemas } from "./schemas.js";
 
 const createWidget: MutationOperationObject = {
 	description: "Create a widget",
@@ -49,7 +25,31 @@ const createWidget: MutationOperationObject = {
 	},
 };
 
-const CreateWidgetInput = Type.Pick(Widget, ["userId", "status"]);
+export const createWidgetOAS: OperationObject = {
+	operationId: "createWidget",
+	description: createWidget.description,
+	requestBody: {
+		required: true,
+		content: {
+			"application/json": {
+				schema: { $ref: "#/components/schemas/CreateWidgetInput" },
+			},
+		},
+	},
+	responses: {
+		200: {
+			description: "OK",
+			content: {
+				"application/json": {
+					schema: { $ref: "#/components/schemas/Widget" },
+				},
+			},
+		},
+		400: {
+			$ref: "#/components/responses/BadRequest",
+		},
+	},
+};
 
 const listUserWidgets: QueryOperationObject = {
 	description: "List widgets for a user",
@@ -70,34 +70,63 @@ const listUserWidgets: QueryOperationObject = {
 	},
 };
 
-const ListUserWidgetsInput = Type.Object({
-	userId: Type.Ref(UserID),
-	status: Type.Optional(Type.Array(Type.Ref(WidgetStatus))),
-	limit: Type.Optional(Type.Integer()),
-});
-
-const ListWidgetsOutput = Type.Object({
-	items: Type.Array(Type.Ref(Widget)),
-	pageInfo: Type.Object({
-		hasNextPage: Type.Boolean(),
-		lastCursor: Type.Optional(Type.String()),
-	}),
-});
+export const listUserWidgetsOAS: OperationObject = {
+	operationId: "listUserWidgets",
+	description: listUserWidgets.description,
+	parameters: [
+		{
+			name: "userId",
+			in: "query",
+			required: true,
+			schema: schemas.ListUserWidgetsInput.properties.userId,
+		},
+		{
+			name: "status",
+			in: "query",
+			schema: schemas.ListUserWidgetsInput.properties.status,
+		},
+		{
+			name: "limit",
+			in: "query",
+			schema: schemas.ListUserWidgetsInput.properties.limit,
+		},
+	],
+	responses: {
+		200: {
+			description: "OK",
+			content: {
+				"application/json": {
+					schema: { $ref: "#/components/schemas/ListWidgetsOutput" },
+				},
+			},
+		},
+		400: {
+			$ref: "#/components/responses/BadRequest",
+		},
+	},
+};
 
 export const operations = {
 	createWidget,
 	listUserWidgets,
 };
 
-export const schemas = withoutSymbols({
-	UserID,
-	WidgetID,
-	WidgetStatus,
-	Widget,
-	CreateWidgetInput,
-	ListUserWidgetsInput,
-	ListWidgetsOutput,
-});
+export const queries = {
+	listUserWidgets,
+};
+
+export const mutations = {
+	createWidget,
+};
+
+export const paths = {
+	"/mutations/createWidget": {
+		post: createWidgetOAS,
+	},
+	"/queries/listUserWidgets": {
+		get: listUserWidgetsOAS,
+	},
+};
 
 export const components: ComponentsObject = {
 	schemas,
