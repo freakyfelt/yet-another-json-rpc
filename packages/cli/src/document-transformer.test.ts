@@ -9,11 +9,28 @@ import {
 import { DocumentTransformer } from "./document-transformer.js";
 import { OASDocument, RPCDocument } from "./types";
 
+const healthCheck = {
+	"/health": {
+		get: {
+			operationId: "health",
+			description: "Health check",
+			responses: {
+				200: {
+					description: "OK",
+				},
+			},
+		},
+	},
+};
+
 const rpcDocument: RPCDocument = {
 	yarpc: "1.0.0",
 	info: {
 		title: "Widgets API",
 		version: "1.0.0",
+	},
+	paths: {
+		...healthCheck,
 	},
 	operations: {
 		queries,
@@ -25,7 +42,10 @@ const rpcDocument: RPCDocument = {
 const oasDocument: OASDocument = {
 	openapi: "3.1.0",
 	info: rpcDocument.info,
-	paths,
+	paths: {
+		...healthCheck,
+		...paths,
+	},
 	components: rpcDocument.components,
 };
 

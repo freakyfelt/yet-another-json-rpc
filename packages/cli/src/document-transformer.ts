@@ -17,7 +17,7 @@ export class DocumentTransformer {
 	}
 
 	async transform(): Promise<OASDocument> {
-		const { info, operations, yarpc, ...rest } = this.doc;
+		const { info, paths: oasPaths, operations, yarpc, ...rest } = this.doc;
 
 		if (typeof yarpc !== "string") {
 			throw new Error("Missing required yarpc version");
@@ -32,7 +32,10 @@ export class DocumentTransformer {
 		return {
 			openapi: "3.1.0",
 			info,
-			paths,
+			paths: {
+				...oasPaths,
+				...paths,
+			},
 			...rest,
 		};
 	}
