@@ -313,6 +313,51 @@ operations:
 
 The goal of the builder is to be a lightweight abstraction on top of OpenAPI, injecting in defaults where it doesn't really matter for services vending an SDK. That being said, the builder does allow you to provide any OpenAPI 3.1 operation definitions you want.
 
+### Adding more properties to parameters
+
+Sometimes you may want to add additional properties to a parameter, such as an example or a deprecation message, or to override its location to be in the `path` or `header`. To do this, you can provide an additional `parameters` key on the input that is keyed by the field names.
+
+For example, you can add a deprecation message to a field:
+
+```yaml
+operations:
+  queries:
+    listWidgets:
+      input:
+        schema: { $ref: '#/components/schemas/ListWidgetsInput' }
+        parameters:
+          status:
+            description: 'Use "statuses" instead'
+            deprecated: true
+      output:
+        schema: { $ref: '#/components/schemas/ListWidgetsOutput' }
+
+      errors: []
+```
+
+<details>
+  <summary>Resulting OpenAPI path specification</summary>
+
+```yaml
+paths:
+  /queries/listWidgets:
+    operationId: listWidgets
+    parameters:
+      - name: status
+        in: query
+        schema: { $ref: '#/components/ListWidgetsInput/properties/status' }
+        description: 'Use "statuses" instead'
+        deprecated: true
+      - name: userId
+        in: query
+        ...
+```
+
+</details>
+
+> **Note**
+> Any fields added will take precedence over the defaults for `in` and `schema`
+
 ### (TODO) Changing the HTTP method and URL
 
 > **Warning**

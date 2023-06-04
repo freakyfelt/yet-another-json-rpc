@@ -5,7 +5,7 @@ import {
 	ResponsesObject,
 } from "./oas.js";
 
-export type RPCParameterObject = Omit<OASParameterObject, "schema">;
+export type RPCParameterObject = Partial<OASParameterObject>;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RPCOutputObject extends MediaTypeObject {}
 
@@ -66,10 +66,8 @@ export interface QueryOperationObject extends RPCOperationObject {
 export interface QueryInputObject extends MediaTypeObject {
 	/**
 	 * Allows for optional overriding of the location of specific parameters
-	 *
-	 * @todo support for non-query locations
 	 */
-	// parameters?: Record<string, RPCParameterObject>;
+	parameters?: Record<string, RPCParameterObject>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

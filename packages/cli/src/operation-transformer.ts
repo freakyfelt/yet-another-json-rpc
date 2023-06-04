@@ -115,7 +115,7 @@ export class OperationTransformer {
 	async transformQueryInput(
 		input: QueryInputObject
 	): Promise<ParameterObject[]> {
-		const { schema: schemaOrRef } = input;
+		const { schema: schemaOrRef, parameters: parameterOverrides = {} } = input;
 		assert(
 			typeof schemaOrRef === "object",
 			"Query input schema must be an object"
@@ -136,6 +136,7 @@ export class OperationTransformer {
 			in: "query",
 			schema,
 			...(inputSchema?.required?.includes(name) ? { required: true } : {}),
+			...parameterOverrides[name],
 		})) as ParameterObject[];
 	}
 
