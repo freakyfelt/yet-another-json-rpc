@@ -59,5 +59,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
+  },
+  "dependencies": {
+    "just-intersect": "^4.3.0"
   }
 }
