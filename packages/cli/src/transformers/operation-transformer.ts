@@ -1,16 +1,21 @@
 import assert from "node:assert";
-import { IResolver } from "./resolver.js";
+import { IResolver } from "../resolver.js";
 import {
+	MutationOperationObject,
 	OperationObject,
-	ParameterObject,
-	QueryInputObject,
 	QueryOperationObject,
+	RPCInputObject,
+	RPCOperationObject,
 	RPCOutputObject,
 	ResponseObject,
 	ResponsesObject,
-	assertObjectTypeSchema,
 	isReferenceObject,
-} from "./types/index.js";
+} from "../types/index.js";
+import {
+	ParameterDefaults,
+	TransformOutput,
+	transformRPCInputs,
+} from "./parameter-transformer.js";
 
 const DEFAULT_RESPONSE: ResponseObject = {
 	description: "OK",
@@ -27,29 +32,11 @@ export class OperationTransformer {
 		this.resolver = resolver;
 	}
 
-	transformMutationOperation(
+	async transformMutationOperation(
 		operationId: string,
-		operation: QueryOperationObject
-	): OperationObject {
-		const { description, input, output, errors, ...rest } = operation;
-		const responses = this.transformOperationResponses(output, errors);
-
-		const requestBody = input
-			? {
-					required: true,
-					content: {
-						"application/json": input,
-					},
-			  }
-			: undefined;
-
-		return {
-			operationId,
-			description,
-			requestBody,
-			responses,
-			...rest,
-		};
+		operation: MutationOperationObject
+	): Promise<OperationObject> {
+		return this.transformOperation(operationId, operation, { in: "body" });
 	}
 
 	/**
@@ -97,24 +84,33 @@ export class OperationTransformer {
 		operationId: string,
 		operation: QueryOperationObject
 	): Promise<OperationObject> {
+		return this.transformOperation(operationId, operation, { in: "query" });
+	}
+
+	private async transformOperation(
+		operationId: string,
+		operation: RPCOperationObject,
+		parameterDefaults: ParameterDefaults
+	): Promise<OperationObject> {
 		const { description, input, output, errors, ...rest } = operation;
-		const parameters = input
-			? await this.transformQueryInput(input)
+		const transformedInputs = input
+			? await this.transformInput(input, parameterDefaults)
 			: undefined;
 		const responses = this.transformOperationResponses(output, errors);
 
 		return {
 			operationId,
 			description,
-			parameters,
+			...transformedInputs,
 			responses,
 			...rest,
 		};
 	}
 
-	async transformQueryInput(
-		input: QueryInputObject
-	): Promise<ParameterObject[]> {
+	private async transformInput(
+		input: RPCInputObject,
+		defaults: ParameterDefaults
+	): Promise<TransformOutput> {
 		const { schema: schemaOrRef, parameters: parameterOverrides = {} } = input;
 		assert(
 			typeof schemaOrRef === "object",
@@ -124,23 +120,11 @@ export class OperationTransformer {
 		const inputSchema = isReferenceObject(schemaOrRef)
 			? await this.resolver.resolve(schemaOrRef)
 			: schemaOrRef;
-		assertObjectTypeSchema(
-			inputSchema,
-			"Query input schema must be an object type with properties"
-		);
 
-		// @todo support parameter overrides object
-
-		return Object.entries(inputSchema.properties).map(([name, schema]) => ({
-			name,
-			in: "query",
-			schema,
-			...(inputSchema?.required?.includes(name) ? { required: true } : {}),
-			...parameterOverrides[name],
-		})) as ParameterObject[];
+		return transformRPCInputs(inputSchema, defaults, parameterOverrides);
 	}
 
-	transformOperationResponses(
+	private transformOperationResponses(
 		output?: RPCOutputObject,
 		errors?: ResponsesObject
 	): OperationObject["responses"] {

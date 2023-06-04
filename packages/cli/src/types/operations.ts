@@ -1,3 +1,4 @@
+import { ParameterLocation } from "openapi3-ts/oas31.js";
 import {
 	MediaTypeObject,
 	ParameterObject as OASParameterObject,
@@ -5,19 +6,50 @@ import {
 	ResponsesObject,
 } from "./oas.js";
 
-export type RPCParameterObject = Partial<OASParameterObject>;
+export type RPCParameterLocation = ParameterLocation | "body";
+
+export type RPCParametersObject = Record<string, RPCParameterObject>;
+export type RPCParameterObject = Omit<
+	OASParameterObject,
+	"in" | "name" | "schema"
+> & {
+	in?: RPCParameterLocation;
+};
+
+export interface RPCInputObject extends MediaTypeObject {
+	/**
+	 * Allows for optional overriding of the location of specific parameters
+	 *
+	 * @example
+	 * ```yaml
+	 * input:
+	 *   schema: { $ref: '#/components/schemas/MyMutationInput' }
+	 *   parameters:
+	 *     arg1:
+	 *       in: path
+	 *       required: true
+	 */
+	parameters?: RPCParametersObject;
+}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RPCOutputObject extends MediaTypeObject {}
 
 export interface RPCOperationObject
 	extends Omit<OperationObject, "operationId" | "requestBody" | "responses"> {
-	input?: MediaTypeObject;
+	/**
+	 * The input object for the operation
+	 *
+	 * NOTE: Optional if no input arguments are required
+	 */
+	input?: RPCInputObject;
+
 	/**
 	 * The response for the query operation
 	 *
 	 * NOTE: Optional for cases where the response is empty
 	 */
 	output?: RPCOutputObject;
+
 	/**
 	 * The OpenAPI error responses that that can be returned by the query operation
 	 * mapped to their HTTP status code
@@ -53,22 +85,8 @@ export interface RPCOperationObject
  * @todo add support for overriding the path
  *
  */
-export interface QueryOperationObject extends RPCOperationObject {
-	/**
-	 * The input object for the query operation
-	 *
-	 * NOTE: Optional if no input arguments are required
-	 */
-	input?: QueryInputObject;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QueryInputObject extends MediaTypeObject {
-	/**
-	 * Allows for optional overriding of the location of specific parameters
-	 */
-	parameters?: Record<string, RPCParameterObject>;
-}
+export interface QueryOperationObject extends RPCOperationObject {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MutationOperationObject extends RPCOperationObject {}

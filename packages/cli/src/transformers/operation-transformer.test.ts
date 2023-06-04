@@ -1,14 +1,19 @@
 import safeGet from "just-safe-get";
 import assert from "node:assert";
 import test from "node:test";
+import { schemas } from "../__fixtures__/schemas.js";
 import {
 	components,
 	createWidgetOAS,
 	listUserWidgetsOAS,
 	operations,
-} from "./__fixtures__/widgets.fixtures.js";
+} from "../__fixtures__/widgets.fixtures.js";
+import {
+	ParameterObject,
+	ReferenceObject,
+	SchemaObject,
+} from "../types/oas.js";
 import { OperationTransformer } from "./operation-transformer.js";
-import { ParameterObject, ReferenceObject, SchemaObject } from "./types/oas.js";
 
 const resolver = {
 	resolve: (ref: ReferenceObject) => {
@@ -23,16 +28,61 @@ const resolver = {
 };
 const transformer = new OperationTransformer({ resolver });
 
-test("OperationTransformer#transformMutationOperation", (t) => {
-	t.test("transforms a mutation operation", () => {
+test("OperationTransformer#transformMutationOperation", async (t) => {
+	await t.test("transforms a mutation operation", async () => {
 		assert.deepStrictEqual(
-			transformer.transformMutationOperation(
+			await transformer.transformMutationOperation(
 				"createWidget",
 				operations.createWidget
 			),
 			createWidgetOAS
 		);
 	});
+
+	await t.test(
+		"moves operations to the path parameters if specified",
+		async () => {
+			const actual = await transformer.transformMutationOperation(
+				"createWidget",
+				{
+					...operations.createWidget,
+					input: {
+						...operations.createWidget.input,
+						parameters: {
+							userId: {
+								in: "path",
+							},
+						},
+					},
+				}
+			);
+
+			const expectedParameters = [
+				{
+					name: "userId",
+					in: "path",
+					required: true,
+					schema: schemas.CreateWidgetInput.properties.userId,
+				},
+			];
+			const expectedRequestBody = {
+				content: {
+					"application/json": {
+						schema: {
+							type: "object",
+							required: ["status"],
+							properties: {
+								status: schemas.CreateWidgetInput.properties.status,
+							},
+						},
+					},
+				},
+			};
+
+			assert.deepStrictEqual(actual.parameters, expectedParameters);
+			assert.deepStrictEqual(actual.requestBody, expectedRequestBody);
+		}
+	);
 });
 
 test("OperationTransformer#transformQueryOperation", async (t) => {

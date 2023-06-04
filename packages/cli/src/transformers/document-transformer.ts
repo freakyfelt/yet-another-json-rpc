@@ -1,12 +1,12 @@
 import intersect from "just-intersect";
-import { OperationTransformer } from "./operation-transformer.js";
-import { getDefaultResolver } from "./resolver.js";
+import { getDefaultResolver } from "../resolver.js";
 import {
 	Logger,
 	OASDocument,
 	PathsObject,
 	RPCDocument,
-} from "./types/index.js";
+} from "../types/index.js";
+import { OperationTransformer } from "./operation-transformer.js";
 
 /**
  * Transforms an RPC document into an OAS document
@@ -61,7 +61,7 @@ export class DocumentTransformer {
 
 		for (const [operationId, operation] of Object.entries(rpc.mutations)) {
 			paths[`/mutations/${operationId}`] = {
-				post: this.transformer.transformMutationOperation(
+				post: await this.transformer.transformMutationOperation(
 					operationId,
 					operation
 				),

@@ -5,9 +5,9 @@ import {
 	mutations,
 	queries,
 	widgetPaths,
-} from "./__fixtures__/widgets.fixtures.js";
+} from "../__fixtures__/widgets.fixtures.js";
+import { OASDocument, RPCDocument } from "../types/index.js";
 import { DocumentTransformer } from "./document-transformer.js";
-import { OASDocument, RPCDocument } from "./types";
 
 const healthCheck = {
 	"/health": {
