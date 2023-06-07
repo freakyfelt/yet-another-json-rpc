@@ -358,17 +358,61 @@ paths:
 > **Note**
 > Any fields added will take precedence over the defaults for `in` and `schema`
 
-### (TODO) Changing the HTTP method and URL
+### Changing the response status code and description
 
-> **Warning**
-> This is not yet implemented
+By default the response status code will be an HTTP 200 with a description of "OK". You can customize these in the `output`, e.g. for describing what "success" means or using a more appropriate response status code.
+
+```yaml
+operations:
+  mutations:
+    createWidget:
+      description: Creates the specified widget
+
+      input:
+        schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+      output:
+        description: Widget created without issue
+        statusCode: 201
+        schema: { $ref: '#/components/schemas/Widget' }
+      errors:
+        400: { $ref: '#/components/responses/BadRequest' }
+        404: { $ref: '#/components/responses/NotFound' }
+```
+
+This will result in the following paths object:
+
+<details>
+  <summary>Resulting OpenAPI paths</summary>
+
+```yaml
+paths:
+  /mutations/createWidget:
+    post:
+      operationId: createWidget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+      responses:
+        201:
+          description: Widget created without issue
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Widget' }
+        400: { $ref: '#/components/responses/BadRequest' }
+        404: { $ref: '#/components/responses/NotFound' }
+```
+</details>
+
+### Changing the HTTP method and URL
 
 By default parameters will end up in the default location (`query` for `query` operations and `requestBody` for `mutation` operations). You can use the keywords `method` and `path` to override the default HTTP method and resulting path respectively. You can even specify path parameters, though you will then need to override the parameters mappings.
 
 > **Note**
 > The YARPC operations can happily live alongside your standard [`paths` object][oas:paths-object] in the specification. The library will merge the resulting paths objects.
 
-For example, you may want to make a RESTful `modifyWidget` route that modifies a widget owned by a user in a RESTful manner:
+For example, you may want to make a RESTful `modifyWidget` route that modifies a widget in a RESTful manner:
 
 ```yaml
 operations:
@@ -403,11 +447,16 @@ paths:
       parameters:
         - name: widgetId
           in: path
-          schema: { $ref: '#/components/schemas/ModifyWidgetInput/properties/widgetId' }
+          schema: { $ref: '#/components/schemas/WidgetID' }
       requestBody:
         application/json:
-          // note the `Body` label appended to the end
-          schema: { $ref: '#/components/schemas/ModifyWidgetInputBody' }
+          schema:
+            type: object
+            required:
+              - userId
+            properties:
+              userId: { $ref: '#/components/schemas/UserID' }
+              ...
 ```
 </details>
 

@@ -9,7 +9,7 @@ export interface RPCDocument<
 > extends Omit<OASDocument<TComponents>, "openapi"> {
 	yarpc: "1.0.0";
 	operations: {
-		queries: Record<string, QueryOperationObject>;
-		mutations: Record<string, MutationOperationObject>;
+		queries?: Record<string, QueryOperationObject>;
+		mutations?: Record<string, MutationOperationObject>;
 	};
 }

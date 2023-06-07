@@ -125,21 +125,23 @@ export class OperationTransformer {
 	}
 
 	private transformOperationResponses(
-		output?: RPCOutputObject,
-		errors?: ResponsesObject
+		output: RPCOutputObject = {},
+		errors: ResponsesObject = {}
 	): OperationObject["responses"] {
-		const successResponse = output
-			? {
-					description: "OK",
-					content: {
-						"application/json": output,
-					},
-			  }
-			: DEFAULT_RESPONSE;
+		const { description = "OK", statusCode = 200, ...mediaType } = output;
+
+		const successResponse =
+			Object.keys(mediaType).length > 0
+				? {
+						description,
+						content: {
+							"application/json": mediaType,
+						},
+				  }
+				: DEFAULT_RESPONSE;
 
 		return {
-			// @todo support other status codes
-			200: successResponse,
+			[statusCode]: successResponse,
 			...errors,
 		};
 	}

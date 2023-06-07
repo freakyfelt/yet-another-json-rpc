@@ -50,18 +50,24 @@ export class DocumentTransformer {
 	async rpcToPaths(rpc: RPCDocument["operations"]): Promise<PathsObject> {
 		const paths: PathsObject = {};
 
-		for (const [operationId, operation] of Object.entries(rpc.queries)) {
-			paths[`/queries/${operationId}`] = {
-				get: await this.transformer.transformQueryOperation(
+		for (const [operationId, operation] of Object.entries(rpc.queries ?? {})) {
+			const httpMethod = operation.method ?? "get";
+
+			paths[operation.path ?? `/queries/${operationId}`] = {
+				[httpMethod]: await this.transformer.transformQueryOperation(
 					operationId,
 					operation
 				),
 			};
 		}
 
-		for (const [operationId, operation] of Object.entries(rpc.mutations)) {
-			paths[`/mutations/${operationId}`] = {
-				post: await this.transformer.transformMutationOperation(
+		for (const [operationId, operation] of Object.entries(
+			rpc.mutations ?? {}
+		)) {
+			const httpMethod = operation.method ?? "post";
+
+			paths[operation.path ?? `/mutations/${operationId}`] = {
+				[httpMethod]: await this.transformer.transformMutationOperation(
 					operationId,
 					operation
 				),
