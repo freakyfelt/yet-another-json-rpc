@@ -390,8 +390,10 @@ paths:
     post:
       operationId: createWidget
       requestBody:
-        application/json:
-          schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateWidgetInput' }
       responses:
         201:
           description: Widget created without issue
@@ -403,17 +405,14 @@ paths:
 ```
 </details>
 
-### (TODO) Changing the HTTP method and URL
-
-> **Warning**
-> This is not yet implemented
+### Changing the HTTP method and URL
 
 By default parameters will end up in the default location (`query` for `query` operations and `requestBody` for `mutation` operations). You can use the keywords `method` and `path` to override the default HTTP method and resulting path respectively. You can even specify path parameters, though you will then need to override the parameters mappings.
 
 > **Note**
 > The YARPC operations can happily live alongside your standard [`paths` object][oas:paths-object] in the specification. The library will merge the resulting paths objects.
 
-For example, you may want to make a RESTful `modifyWidget` route that modifies a widget owned by a user in a RESTful manner:
+For example, you may want to make a RESTful `modifyWidget` route that modifies a widget in a RESTful manner:
 
 ```yaml
 operations:
@@ -448,11 +447,16 @@ paths:
       parameters:
         - name: widgetId
           in: path
-          schema: { $ref: '#/components/schemas/ModifyWidgetInput/properties/widgetId' }
+          schema: { $ref: '#/components/schemas/WidgetID' }
       requestBody:
         application/json:
-          // note the `Body` label appended to the end
-          schema: { $ref: '#/components/schemas/ModifyWidgetInputBody' }
+          schema:
+            type: object
+            required:
+              - userId
+            properties:
+              userId: { $ref: '#/components/schemas/UserID' }
+              ...
 ```
 </details>
 

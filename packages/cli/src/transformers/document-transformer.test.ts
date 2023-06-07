@@ -140,4 +140,42 @@ test("DocumentTransformer#transform", async (t) => {
 		const actual = await transformer.transform();
 		assert.deepStrictEqual(actual, oasDocument);
 	});
+
+	await t.test("override query method and path", async () => {
+		const doc = {
+			...rpcDocument,
+			operations: {
+				queries: {
+					deepHealthCheck: {
+						method: "post",
+						path: "/health/deep",
+
+						output: {
+							description: "No content",
+							statusCode: 204,
+						},
+					},
+				},
+			},
+		} as const;
+
+		const expected = {
+			...oasDocument,
+			paths: {
+				...oasDocument.paths,
+				"/health/deep": {
+					post: {
+						operationId: "deepHealthCheck",
+						responses: {
+							204: { description: "No content" },
+						},
+					},
+				},
+			},
+		};
+
+		const transformer = new DocumentTransformer(doc);
+		const actual = await transformer.transform();
+		assert.deepStrictEqual(actual, expected);
+	});
 });
