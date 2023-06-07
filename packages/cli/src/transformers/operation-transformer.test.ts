@@ -155,4 +155,35 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 			assert.deepStrictEqual(actualByName, expectedByName);
 		}
 	);
+
+	await t.test(
+		"allows for overriding the successful response status code and description",
+		async () => {
+			const actual = await transformer.transformQueryOperation(
+				"listUserWidgets",
+				{
+					...operations.listUserWidgets,
+					method: "post",
+					path: "/widgets",
+					output: {
+						...operations.listUserWidgets.output,
+						statusCode: 418,
+						description: "I'm a teapot",
+					},
+				}
+			);
+
+			const expectedResponseLength =
+				Object.keys(listUserWidgetsOAS.responses).length + 1;
+			assert.equal(Object.keys(actual.responses), expectedResponseLength);
+			assert.strictEqual(actual.responses["418"], {
+				description: "I'm a teapot",
+				content: {
+					418: {
+						"application/json": operations.listUserWidgets.output,
+					},
+				},
+			});
+		}
+	);
 });

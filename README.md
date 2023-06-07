@@ -358,6 +358,51 @@ paths:
 > **Note**
 > Any fields added will take precedence over the defaults for `in` and `schema`
 
+### Changing the response status code and description
+
+By default the response status code will be an HTTP 200 with a description of "OK". You can customize these in the `output`, e.g. for describing what "success" means or using a more appropriate response status code.
+
+```yaml
+operations:
+  mutations:
+    createWidget:
+      description: Creates the specified widget
+
+      input:
+        schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+      output:
+        description: Widget created without issue
+        statusCode: 201
+        schema: { $ref: '#/components/schemas/Widget' }
+      errors:
+        400: { $ref: '#/components/responses/BadRequest' }
+        404: { $ref: '#/components/responses/NotFound' }
+```
+
+This will result in the following paths object:
+
+<details>
+  <summary>Resulting OpenAPI paths</summary>
+
+```yaml
+paths:
+  /mutations/createWidget:
+    post:
+      operationId: createWidget
+      requestBody:
+        application/json:
+          schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+      responses:
+        201:
+          description: Widget created without issue
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Widget' }
+        400: { $ref: '#/components/responses/BadRequest' }
+        404: { $ref: '#/components/responses/NotFound' }
+```
+</details>
+
 ### (TODO) Changing the HTTP method and URL
 
 > **Warning**

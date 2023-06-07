@@ -1,5 +1,6 @@
 import { ParameterLocation } from "openapi3-ts/oas31.js";
 import {
+	HttpMethod,
 	MediaTypeObject,
 	ParameterObject as OASParameterObject,
 	OperationObject,
@@ -32,10 +33,24 @@ export interface RPCInputObject extends MediaTypeObject {
 	parameters?: RPCParametersObject;
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface RPCOutputObject extends MediaTypeObject {}
+export interface RPCOutputObject extends MediaTypeObject {
+	/**
+	 * Description of what success means for this operation
+	 *
+	 * This field will be mapped to the `description` field of the `200` response
+	 */
+	description?: string;
+	/**
+	 * Allows for overriding the default "200" status code
+	 */
+	statusCode?: number;
+}
 
 export interface RPCOperationObject
 	extends Omit<OperationObject, "operationId" | "requestBody" | "responses"> {
+	method?: HttpMethod;
+	path?: string;
+
 	/**
 	 * The input object for the operation
 	 *
