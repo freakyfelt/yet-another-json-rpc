@@ -6,7 +6,9 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/packages/cli" # Location of package manifests
+    directory: "/" # Location of package manifests
+    # https://github.com/dependabot/dependabot-core/issues/5226
+    versioning-strategy: "increase"
     schedule:
       interval: "daily"
     labels:
