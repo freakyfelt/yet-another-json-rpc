@@ -3,6 +3,8 @@
   "release-type": "node",
   "plugins": ["node-workspace"],
   "packages": {
-    "packages/cli": {}
+    "packages/cli": {
+      "component": "cli"
+    }
   }
 }
