@@ -10,9 +10,9 @@ operations:
     getWidget:
       description: Get a widget by ID
       input:
-        $ref: "#/components/schemas/GetWidgetInput"
+        schema: { $ref: "#/components/schemas/GetWidgetInput" }
       output:
-        $ref: "#/components/schemas/Widget"
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
         401: { $ref: "#/components/responses/InvalidCredentials" }
         403: { $ref: "#/components/responses/Forbidden" }
@@ -20,9 +20,9 @@ operations:
     listWidgets:
       description: List widgets
       input:
-        $ref: "#/components/schemas/ListWidgetsInput"
+        schema: { $ref: "#/components/schemas/ListWidgetsInput" }
       output:
-        $ref: "#/components/schemas/ListWidgetsOutput"
+        schema: { $ref: "#/components/schemas/ListWidgetsOutput" }
       errors:
         400: { $ref: "#/components/responses/BadRequest" }
         401: { $ref: "#/components/responses/InvalidCredentials" }
@@ -31,9 +31,9 @@ operations:
     createWidget:
       description: Create a widget
       input:
-        $ref: "#/components/schemas/CreateWidgetInput"
+        schema: { $ref: "#/components/schemas/CreateWidgetInput" }
       output:
-        $ref: "#/components/schemas/Widget"
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
         400: { $ref: "#/components/responses/BadRequest" }
         401: { $ref: "#/components/responses/InvalidCredentials" }
@@ -41,9 +41,9 @@ operations:
     deactivateWidget:
       description: Deactivate a widget
       input:
-        $ref: "#/components/schemas/DeactivateWidgetInput"
+        schema: { $ref: "#/components/schemas/DeactivateWidgetInput" }
       output:
-        $ref: "#/components/schemas/Widget"
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
         400: { $ref: "#/components/responses/BadRequest" }
         401: { $ref: "#/components/responses/InvalidCredentials" }
@@ -54,20 +54,28 @@ components:
   responses:
     BadRequest:
       description: Bad request (HTTP 400)
-      schema:
-        $ref: "#/components/schemas/Error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
     InvalidCredentials:
       description: Invalid credentials (HTTP 401)
-      schema:
-        $ref: "#/components/schemas/Error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
     Forbidden:
       description: Not authorized (HTTP 403)
-      schema:
-        $ref: "#/components/schemas/Error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
     NotFound:
       description: The resource could not be found (HTTP 404)
-      schema:
-        $ref: "#/components/schemas/Error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   schemas:
     ISO8601Timestamp:
       type: string

@@ -12,16 +12,22 @@ import { OperationTransformer } from "./operation-transformer.js";
  * Transforms an RPC document into an OAS document
  */
 export class DocumentTransformer {
+	static transform(doc: RPCDocument): Promise<OASDocument> {
+		return new DocumentTransformer(doc).transform();
+	}
+
 	private doc: RPCDocument;
 	private transformer: OperationTransformer;
 	private logger: Logger;
 
 	constructor(doc: RPCDocument) {
 		this.doc = doc;
+		this.logger = console;
+
 		this.transformer = new OperationTransformer({
+			logger: this.logger,
 			resolver: getDefaultResolver(doc),
 		});
-		this.logger = console;
 	}
 
 	async transform(): Promise<OASDocument> {
