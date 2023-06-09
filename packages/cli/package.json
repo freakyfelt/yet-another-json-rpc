@@ -29,14 +29,17 @@
   ],
   "scripts": {
     "build": "tsup-node src/index.ts",
-    "ci": "npm run test && npm run build",
+    "build:check": "tsc --noEmit",
+    "ci": "npm run build:check && npm run lint:check && npm run test:node && npm run format:check",
     "clean": "rm -rf dist",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "npm run lint:code",
     "lint:code": "eslint . --cache --fix --ext .ts",
+    "lint:check": "eslint . --cache --ext .ts",
     "pretest": "npm run lint && tsc --noEmit",
-    "test": "node --loader ts-node/esm --test src/*.test.ts",
+    "test": "npm run build:check && npm run test:node",
+    "test:node": "node --loader ts-node/esm --test src/*.test.ts",
     "posttest": "npm run format"
   },
   "devDependencies": {
