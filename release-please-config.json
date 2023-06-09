@@ -1,0 +1,13 @@
+{
+  "monorepo-tags": true,
+  "release-type": "node",
+  "plugins": ["node-workspace"],
+  "packages": {
+    ".": {
+      "exclude-paths": ["packages/cli"]
+    },
+    "packages/cli": {
+      "release-type": "node"
+    }
+  }
+}
