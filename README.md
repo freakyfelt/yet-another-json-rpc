@@ -309,6 +309,31 @@ operations:
         404: { $ref: '#/components/schemas/NotFound' }
 ```
 
+## Generating the resulting OpenAPI specification
+
+The CLI includes a `yarpc-cli` that can be used to generate the resulting OpenAPI 3.1 specification. This works by transforming your queries and mutations and then merging them with any paths that may have been specified in the input YARPC specification.
+
+```sh
+npx @freakyfelt/yarpc-cli --input yarpc.json --output openapi.json
+```
+
+### Emitting YAML
+
+By default the CLI will emit JSON, but `--format yaml` can be used to emit YAML instead
+
+```
+npx @freakyfelt/yarpc-cli --input yarpc.json --output openapi.yaml --format yaml
+```
+
+### Using stdin and stdout
+
+The CLI can also read from `stdin` and write to `stdout` by using `-` instead of a file name
+
+```sh
+# read the YARPC spec from stdin and write the OpenAPI spec to stdout
+cat yarpc.json | npx @freakyfelt/yarpc-cli --input - --output - | ./build-tool.sh
+```
+
 ## Customizations
 
 The goal of the builder is to be a lightweight abstraction on top of OpenAPI, injecting in defaults where it doesn't really matter for services vending an SDK. That being said, the builder does allow you to provide any OpenAPI 3.1 operation definitions you want.

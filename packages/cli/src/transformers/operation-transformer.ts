@@ -1,6 +1,7 @@
 import assert from "node:assert";
-import { IResolver } from "../resolver.js";
+import { IRefResolver } from "../resolver.js";
 import {
+	Logger,
 	MutationOperationObject,
 	OperationObject,
 	QueryOperationObject,
@@ -22,13 +23,16 @@ const DEFAULT_RESPONSE: ResponseObject = {
 };
 
 type TransformerDeps = {
-	resolver: IResolver;
+	resolver: IRefResolver;
+	logger?: Logger;
 };
 
 export class OperationTransformer {
-	resolver: IResolver;
+	resolver: IRefResolver;
+	logger?: Logger;
 
-	constructor({ resolver }: TransformerDeps) {
+	constructor({ logger, resolver }: TransformerDeps) {
+		this.logger = logger;
 		this.resolver = resolver;
 	}
 
@@ -92,11 +96,34 @@ export class OperationTransformer {
 		operation: RPCOperationObject,
 		parameterDefaults: ParameterDefaults
 	): Promise<OperationObject> {
+		this.logger?.debug(
+			{ operationId, operation, parameterDefaults },
+			`Transforming operation "${operationId}"`
+		);
 		const { description, input, output, errors, ...rest } = operation;
-		const transformedInputs = input
-			? await this.transformInput(input, parameterDefaults)
-			: undefined;
-		const responses = this.transformOperationResponses(output, errors);
+
+		let transformedInputs: TransformOutput | undefined;
+		let responses: ResponsesObject | undefined;
+
+		if (input) {
+			try {
+				transformedInputs = await this.transformInput(input, parameterDefaults);
+			} catch (err) {
+				throw new Error(
+					`Failed to transform input for operation "${operationId}"`,
+					{ cause: err }
+				);
+			}
+		}
+
+		try {
+			responses = this.transformOperationResponses(output, errors);
+		} catch (err) {
+			throw new Error(
+				`Failed to transform responses for operation "${operationId}"`,
+				{ cause: err }
+			);
+		}
 
 		return {
 			operationId,
@@ -111,6 +138,8 @@ export class OperationTransformer {
 		input: RPCInputObject,
 		defaults: ParameterDefaults
 	): Promise<TransformOutput> {
+		this.logger?.debug({ input, defaults }, "Transforming input");
+
 		const { schema: schemaOrRef, parameters: parameterOverrides = {} } = input;
 		assert(
 			typeof schemaOrRef === "object",

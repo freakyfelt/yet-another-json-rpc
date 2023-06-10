@@ -26,7 +26,7 @@ const resolver = {
 		return schema;
 	},
 };
-const transformer = new OperationTransformer({ resolver });
+const transformer = new OperationTransformer({ logger: console, resolver });
 
 test("OperationTransformer#transformMutationOperation", async (t) => {
 	await t.test("transforms a mutation operation", async () => {

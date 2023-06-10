@@ -1,0 +1,266 @@
+openapi: 3.1.0
+info:
+  title: Widgets API
+  version: 1.0.0
+  description: An API for managing widgets
+paths:
+  /queries/getWidget:
+    get:
+      operationId: getWidget
+      description: Get a widget by ID
+      parameters:
+        - name: id
+          in: query
+          schema:
+            $ref: "#/components/schemas/WidgetID"
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Widget"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /queries/listWidgets:
+    get:
+      operationId: listWidgets
+      description: List widgets
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/WidgetID"
+        - name: status
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/WidgetStatus"
+        - name: limit
+          in: query
+          schema:
+            $ref: "#/components/schemas/PaginationLimit"
+        - name: token
+          in: query
+          schema:
+            $ref: "#/components/schemas/PaginationToken"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListWidgetsOutput"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /mutations/createWidget:
+    post:
+      operationId: createWidget
+      description: Create a widget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the widget
+                status:
+                  $ref: "#/components/schemas/WidgetStatus"
+              required:
+                - name
+                - status
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Widget"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /mutations/deactivateWidget:
+    post:
+      operationId: deactivateWidget
+      description: Deactivate a widget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  $ref: "#/components/schemas/WidgetID"
+              required:
+                - id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Widget"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+$schema: https://spec.openapis.org/oas/3.1/schema/2022-10-07
+components:
+  responses:
+    BadRequest:
+      description: Bad request (HTTP 400)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InvalidCredentials:
+      description: Invalid credentials (HTTP 401)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Not authorized (HTTP 403)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: The resource could not be found (HTTP 404)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    ISO8601Timestamp:
+      type: string
+      format: date-time
+      description: An ISO 8601 timestamp
+    PaginationToken:
+      type: string
+      description: A token for fetching the next page of results
+    PaginationLimit:
+      type: integer
+      minimum: 1
+      maximum: 100
+      default: 10
+      description: The maximum number of results to return
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+      required:
+        - code
+        - message
+    WidgetID:
+      type: string
+      description: The unique identifier of a widget
+    WidgetStatus:
+      description: The status of a widget
+      type: string
+      enum:
+        - active
+        - inactive
+    Widget:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/WidgetID"
+        name:
+          type: string
+          description: The name of the widget
+        status:
+          $ref: "#/components/schemas/WidgetStatus"
+        createdAt:
+          $ref: "#/components/schemas/ISO8601Timestamp"
+          description: The date and time the widget was created
+        updatedAt:
+          $ref: "#/components/schemas/ISO8601Timestamp"
+          description: The date and time the widget was last updated
+      required:
+        - id
+        - name
+        - status
+        - createdAt
+        - updatedAt
+    GetWidgetInput:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/WidgetID"
+      required:
+        - id
+    ListWidgetsInput:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            $ref: "#/components/schemas/WidgetID"
+        status:
+          type: array
+          items:
+            $ref: "#/components/schemas/WidgetStatus"
+        limit:
+          $ref: "#/components/schemas/PaginationLimit"
+        token:
+          $ref: "#/components/schemas/PaginationToken"
+    ListWidgetsOutput:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Widget"
+          limit: null
+          nextPage:
+            $ref: "#/components/schemas/NextPageToken"
+      required:
+        - items
+    CreateWidgetInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the widget
+        status:
+          $ref: "#/components/schemas/WidgetStatus"
+      required:
+        - name
+        - status
+    DeactivateWidgetInput:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/WidgetID"
+      required:
+        - id
+

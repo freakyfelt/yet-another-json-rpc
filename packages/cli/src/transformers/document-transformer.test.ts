@@ -1,5 +1,6 @@
 import assert from "node:assert";
 import test from "node:test";
+import pino from "pino";
 import {
 	components,
 	mutations,
@@ -8,6 +9,8 @@ import {
 } from "../__fixtures__/widgets.fixtures.js";
 import { OASDocument, RPCDocument } from "../types/index.js";
 import { DocumentTransformer } from "./document-transformer.js";
+
+const logger = pino({ level: "silent" });
 
 const healthCheck = {
 	"/health": {
@@ -66,11 +69,9 @@ const oasDocument: OASDocument = {
 	components: rpcDocument.components,
 };
 
-const transformer = new DocumentTransformer(rpcDocument);
-
 test("DocumentTransformer#transform", async (t) => {
 	await t.test("transforms an RPC document into an OAS document", async () => {
-		const actual = await transformer.transform();
+		const actual = await DocumentTransformer.transform(rpcDocument, { logger });
 		assert.deepStrictEqual(actual, oasDocument);
 	});
 
@@ -78,8 +79,7 @@ test("DocumentTransformer#transform", async (t) => {
 		const doc = { ...rpcDocument };
 		// @ts-expect-error Missing required yarpc version
 		delete doc.yarpc;
-		const transformer = new DocumentTransformer(doc);
-		await assert.rejects(transformer.transform(), {
+		await assert.rejects(DocumentTransformer.transform(doc, { logger }), {
 			message: "Missing required yarpc version",
 		});
 	});
@@ -90,8 +90,7 @@ test("DocumentTransformer#transform", async (t) => {
 			const doc = { ...rpcDocument };
 			// @ts-expect-error incorrect yarpc version
 			doc.yarpc = "2.0.0";
-			const transformer = new DocumentTransformer(doc);
-			await assert.rejects(transformer.transform(), {
+			await assert.rejects(DocumentTransformer.transform(doc, { logger }), {
 				message: "Unsupported YARPC version: 2.0.0",
 			});
 		}
@@ -120,8 +119,7 @@ test("DocumentTransformer#transform", async (t) => {
 			},
 		};
 
-		const transformer = new DocumentTransformer(doc);
-		const actual = await transformer.transform();
+		const actual = await DocumentTransformer.transform(doc, { logger });
 		assert.deepStrictEqual(actual, expected);
 	});
 
@@ -136,8 +134,7 @@ test("DocumentTransformer#transform", async (t) => {
 			},
 		};
 
-		const transformer = new DocumentTransformer(doc);
-		const actual = await transformer.transform();
+		const actual = await DocumentTransformer.transform(doc, { logger });
 		assert.deepStrictEqual(actual, oasDocument);
 	});
 
@@ -174,8 +171,7 @@ test("DocumentTransformer#transform", async (t) => {
 			},
 		};
 
-		const transformer = new DocumentTransformer(doc);
-		const actual = await transformer.transform();
+		const actual = await DocumentTransformer.transform(doc, { logger });
 		assert.deepStrictEqual(actual, expected);
 	});
 });
