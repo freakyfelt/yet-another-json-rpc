@@ -15,6 +15,7 @@ jobs:
         with:
           release-type: node
           monorepo-tags: true
+          command: manifest
       # The logic below handles the npm publication:
       - uses: actions/checkout@v2
         # these if statements ensure that a publication only occurs when
