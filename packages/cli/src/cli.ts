@@ -1,4 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import pino from "pino";
 import YAML from "yaml";
@@ -14,8 +15,8 @@ function showHelp() {
 Usage: yarpc-cli [options]
 
 Options:
-  -i, --input  [string]     Input RPC file path
-  -o, --output [string]     Output OpenAPI file path (default: openapi.json)
+  -i, --input  [string]     Input RPC file path or "-" for stdin
+  -o, --output [string]     Output OpenAPI file path or "-" for stdout (default: openapi.json)
   -f, --format [yaml|json]  Output format (default: json)
 
   -h, --help     Show help and exit
@@ -34,20 +35,29 @@ type EmitOpenAPIParams = {
 async function emitOpenAPI(params: EmitOpenAPIParams) {
 	const { input, output, format, logger } = params;
 
-	const source = YAML.parse(await readFile(input, "utf8")) as RPCDocument;
+	const text =
+		input === "-"
+			? readFileSync(process.stdin.fd, "utf8")
+			: readFileSync(input, "utf8");
+	const source = YAML.parse(text.toString()) as RPCDocument;
 
 	const transformed = await DocumentTransformer.transform(source, { logger });
 	let contents;
 
 	if (format === "yaml") {
-		contents = YAML.stringify(transformed, { aliasDuplicateObjects: false });
+		contents =
+			YAML.stringify(transformed, { aliasDuplicateObjects: false }) + "\n";
 	} else if (format === "json") {
-		contents = JSON.stringify(transformed, null, 2);
+		contents = JSON.stringify(transformed, null, 2) + "\n";
 	} else {
 		throw new Error(`Unsupported format: ${String(format)}`);
 	}
 
-	await writeFile(output, contents, "utf8");
+	if (output === "-") {
+		process.stdout.write(contents);
+	} else {
+		await writeFile(output, contents, "utf8");
+	}
 }
 
 export async function main() {
@@ -66,6 +76,9 @@ export async function main() {
 		level: args.values.verbose ? "debug" : "info",
 		transport: {
 			target: "pino-pretty",
+			options: {
+				destination: process.stderr.fd,
+			},
 		},
 	});
 

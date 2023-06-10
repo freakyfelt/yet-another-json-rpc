@@ -263,3 +263,4 @@ components:
           $ref: "#/components/schemas/WidgetID"
       required:
         - id
+
