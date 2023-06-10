@@ -1,8 +1,9 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
+import pino from "pino";
 import YAML from "yaml";
 import { DocumentTransformer } from "./transformers";
-import { RPCDocument } from "./types";
+import { Logger, RPCDocument } from "./types";
 
 const DEFAULT_OUT_PATH = "openapi.json";
 const SUPPORTED_FORMATS = ["json", "yaml"] as const;
@@ -27,14 +28,15 @@ type EmitOpenAPIParams = {
 	input: string;
 	output: string;
 	format: SupportedFormat;
+	logger: Logger;
 };
 
 async function emitOpenAPI(params: EmitOpenAPIParams) {
-	const { input, output, format } = params;
+	const { input, output, format, logger } = params;
 
 	const source = YAML.parse(await readFile(input, "utf8")) as RPCDocument;
 
-	const transformed = await DocumentTransformer.transform(source);
+	const transformed = await DocumentTransformer.transform(source, { logger });
 	let contents;
 
 	if (format === "yaml") {
@@ -51,12 +53,19 @@ async function emitOpenAPI(params: EmitOpenAPIParams) {
 export async function main() {
 	const args = parseArgs({
 		options: {
-			help: { type: "boolean", alias: "h" },
-			version: { type: "boolean", alias: "v" },
-			verbose: { type: "boolean", alias: "V" },
-			input: { type: "string", alias: "i" },
-			output: { type: "string", alias: "o", default: "openapi.json" },
-			format: { type: "string", alias: "f", default: "json" },
+			help: { type: "boolean", short: "h" },
+			version: { type: "boolean", short: "v" },
+			verbose: { type: "boolean", short: "V" },
+			input: { type: "string", short: "i" },
+			output: { type: "string", short: "o", default: "openapi.json" },
+			format: { type: "string", short: "f", default: "json" },
+		},
+	});
+
+	const logger = pino({
+		level: args.values.verbose ? "debug" : "info",
+		transport: {
+			target: "pino-pretty",
 		},
 	});
 
@@ -82,5 +91,10 @@ export async function main() {
 		return;
 	}
 
-	await emitOpenAPI({ format: format as SupportedFormat, input, output });
+	await emitOpenAPI({
+		input,
+		output,
+		format: format as SupportedFormat,
+		logger,
+	});
 }

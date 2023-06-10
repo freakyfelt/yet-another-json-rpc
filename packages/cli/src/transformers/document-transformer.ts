@@ -1,5 +1,5 @@
 import intersect from "just-intersect";
-import { getDefaultResolver } from "../resolver.js";
+import { IRefResolver, getDefaultRefResolver } from "../resolver.js";
 import {
 	Logger,
 	OASDocument,
@@ -8,26 +8,39 @@ import {
 } from "../types/index.js";
 import { OperationTransformer } from "./operation-transformer.js";
 
+type TransformerOptions = {
+	logger?: Logger;
+	/** specify a different schema $ref resolver */
+	refResolver?: IRefResolver;
+	/** use this operation transformer instead */
+	operationTransformer?: OperationTransformer;
+};
+
 /**
  * Transforms an RPC document into an OAS document
  */
 export class DocumentTransformer {
-	static transform(doc: RPCDocument): Promise<OASDocument> {
-		return new DocumentTransformer(doc).transform();
+	static transform(
+		doc: RPCDocument,
+		opts: TransformerOptions = {}
+	): Promise<OASDocument> {
+		return new DocumentTransformer(doc, opts).transform();
 	}
 
 	private doc: RPCDocument;
-	private transformer: OperationTransformer;
-	private logger: Logger;
+	private operationTransformer: OperationTransformer;
+	private logger?: Logger;
 
-	constructor(doc: RPCDocument) {
+	constructor(doc: RPCDocument, opts: TransformerOptions = {}) {
 		this.doc = doc;
-		this.logger = console;
+		this.logger = opts.logger;
 
-		this.transformer = new OperationTransformer({
-			logger: this.logger,
-			resolver: getDefaultResolver(doc),
-		});
+		this.operationTransformer =
+			opts.operationTransformer ??
+			new OperationTransformer({
+				logger: this.logger ?? console,
+				resolver: opts.refResolver ?? getDefaultRefResolver(doc),
+			});
 	}
 
 	async transform(): Promise<OASDocument> {
@@ -53,14 +66,21 @@ export class DocumentTransformer {
 		};
 	}
 
-	async rpcToPaths(rpc: RPCDocument["operations"]): Promise<PathsObject> {
+	private async rpcToPaths(
+		rpc: RPCDocument["operations"]
+	): Promise<PathsObject> {
 		const paths: PathsObject = {};
 
 		for (const [operationId, operation] of Object.entries(rpc.queries ?? {})) {
 			const httpMethod = operation.method ?? "get";
+			const path = operation.path ?? `/queries/${operationId}`;
+			this.logger?.debug(
+				{ operationId, httpMethod, operation, path },
+				"Transforming query"
+			);
 
-			paths[operation.path ?? `/queries/${operationId}`] = {
-				[httpMethod]: await this.transformer.transformQueryOperation(
+			paths[path] = {
+				[httpMethod]: await this.operationTransformer.transformQueryOperation(
 					operationId,
 					operation
 				),
@@ -71,19 +91,30 @@ export class DocumentTransformer {
 			rpc.mutations ?? {}
 		)) {
 			const httpMethod = operation.method ?? "post";
+			const path = operation.path ?? `/mutations/${operationId}`;
+			this.logger?.debug(
+				{ operationId, httpMethod, operation, path },
+				"Transforming mutation"
+			);
 
-			paths[operation.path ?? `/mutations/${operationId}`] = {
-				[httpMethod]: await this.transformer.transformMutationOperation(
-					operationId,
-					operation
-				),
+			paths[path] = {
+				[httpMethod]:
+					await this.operationTransformer.transformMutationOperation(
+						operationId,
+						operation
+					),
 			};
 		}
 
 		return paths;
 	}
 
-	deepMergePaths(paths: PathsObject, otherPaths: PathsObject): PathsObject {
+	private deepMergePaths(
+		paths: PathsObject,
+		otherPaths: PathsObject
+	): PathsObject {
+		this.logger?.debug({ paths, otherPaths }, "Merging paths");
+
 		const mergedPaths: PathsObject = {
 			...paths,
 		};
@@ -101,7 +132,7 @@ export class DocumentTransformer {
 				Object.keys(mergedPaths[path])
 			);
 			if (duplicate.length > 0) {
-				this.logger.warn(
+				this.logger?.warn(
 					{ path, duplicate },
 					"Duplicate operation(s) will be overwritten"
 				);

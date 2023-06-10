@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { IResolver } from "../resolver.js";
+import { IRefResolver } from "../resolver.js";
 import {
 	Logger,
 	MutationOperationObject,
@@ -23,13 +23,13 @@ const DEFAULT_RESPONSE: ResponseObject = {
 };
 
 type TransformerDeps = {
-	logger: Logger;
-	resolver: IResolver;
+	resolver: IRefResolver;
+	logger?: Logger;
 };
 
 export class OperationTransformer {
-	resolver: IResolver;
-	logger: Logger;
+	resolver: IRefResolver;
+	logger?: Logger;
 
 	constructor({ logger, resolver }: TransformerDeps) {
 		this.logger = logger;
@@ -96,7 +96,7 @@ export class OperationTransformer {
 		operation: RPCOperationObject,
 		parameterDefaults: ParameterDefaults
 	): Promise<OperationObject> {
-		this.logger.debug(
+		this.logger?.debug(
 			{ operationId, operation, parameterDefaults },
 			`Transforming operation "${operationId}"`
 		);
@@ -138,7 +138,7 @@ export class OperationTransformer {
 		input: RPCInputObject,
 		defaults: ParameterDefaults
 	): Promise<TransformOutput> {
-		this.logger.debug({ input, defaults }, "Transforming input");
+		this.logger?.debug({ input, defaults }, "Transforming input");
 
 		const { schema: schemaOrRef, parameters: parameterOverrides = {} } = input;
 		assert(

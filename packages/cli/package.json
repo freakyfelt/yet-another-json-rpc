@@ -20,7 +20,7 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "bin": {
-    "yarpc": "./bin/yarpc-cli.mjs"
+    "yarpc-cli": "./bin/yarpc-cli.mjs"
   },
   "exports": {
     "types": "./dist/index.d.ts",
@@ -33,6 +33,9 @@
   "scripts": {
     "build": "tsup-node src/index.ts",
     "build:check": "tsc --noEmit",
+    "build:examples": "npm run build && npm run build:examples:yaml && npm run build:examples:json",
+    "build:examples:yaml": "bin/yarpc-cli.mjs -i examples/widgets.rpc.yaml -o examples/widgets.oas.yaml -f yaml",
+    "build:examples:json": "bin/yarpc-cli.mjs -i examples/widgets.rpc.yaml -o examples/widgets.oas.json -f json",
     "ci": "npm run build:check && npm run lint:check && npm run test:node && npm run format:check",
     "clean": "rm -rf dist",
     "format": "prettier --write .",
@@ -43,7 +46,7 @@
     "pretest": "npm run lint && tsc --noEmit",
     "test": "npm run build:check && npm run test:node",
     "test:node": "node --loader ts-node/esm --test src/*.test.ts",
-    "posttest": "npm run format"
+    "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
     "@sinclair/typebox": "^0.28.14",
@@ -68,6 +71,8 @@
   },
   "dependencies": {
     "just-intersect": "^4.3.0",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0",
     "yaml": "^2.3.1"
   }
 }

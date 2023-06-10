@@ -1,11 +1,11 @@
 import safeGet from "just-safe-get";
 import { RPCDocument, ReferenceObject, SchemaObject } from "./types/index.js";
 
-export type IResolver = {
+export type IRefResolver = {
 	resolve(ref: ReferenceObject): SchemaObject | PromiseLike<SchemaObject>;
 };
 
-export const getDefaultResolver = (doc: RPCDocument): IResolver => ({
+export const getDefaultRefResolver = (doc: RPCDocument): IRefResolver => ({
 	resolve: (ref: ReferenceObject) => {
 		if (!ref.$ref.startsWith("#/components/")) {
 			throw new Error(`Unsupported reference ${ref.$ref}`);
