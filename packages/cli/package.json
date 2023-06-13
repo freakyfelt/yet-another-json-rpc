@@ -52,7 +52,7 @@
     "@sinclair/typebox": "^0.28.15",
     "@tsconfig/node18": "^2.0.1",
     "@types/node": "^18.16.18",
-    "@typescript-eslint/eslint-plugin": "^5.59.9",
+    "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
