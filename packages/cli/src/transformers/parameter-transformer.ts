@@ -4,6 +4,7 @@ import {
 	RPCParameterLocation,
 	RPCParameterObject,
 	RPCParametersObject,
+	ReferenceObject,
 	SchemaObject,
 	assertObjectTypeSchema,
 } from "../types/index.js";
@@ -59,6 +60,7 @@ export type ParameterDefaults = RPCParameterObject & {
  * @returns
  */
 export function transformRPCInputs(
+	schemaOrRef: SchemaObject | ReferenceObject,
 	inputSchema: SchemaObject,
 	defaults: ParameterDefaults,
 	overrides: RPCParametersObject = {}
@@ -75,7 +77,7 @@ export function transformRPCInputs(
 				required: true,
 				content: {
 					"application/json": {
-						schema: inputSchema,
+						schema: schemaOrRef,
 					},
 				},
 			},
