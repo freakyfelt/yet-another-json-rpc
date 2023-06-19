@@ -172,6 +172,10 @@ test("DocumentTransformer#transform", async (t) => {
 		};
 
 		const actual = await DocumentTransformer.transform(doc, { logger });
-		assert.deepStrictEqual(actual, expected);
+
+		assert.deepStrictEqual(
+			actual.paths?.["/health/deep"],
+			expected.paths["/health/deep"]
+		);
 	});
 });

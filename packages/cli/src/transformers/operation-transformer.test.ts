@@ -66,6 +66,7 @@ test("OperationTransformer#transformMutationOperation", async (t) => {
 				},
 			];
 			const expectedRequestBody = {
+				required: true,
 				content: {
 					"application/json": {
 						schema: {
@@ -173,17 +174,33 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 				}
 			);
 
-			const expectedResponseLength =
-				Object.keys(listUserWidgetsOAS.responses).length + 1;
-			assert.equal(Object.keys(actual.responses), expectedResponseLength);
-			assert.strictEqual(actual.responses["418"], {
+			const expectedResponseLength = Object.keys(
+				listUserWidgetsOAS.responses
+			).length;
+			assert.equal(
+				Object.keys(actual.responses).length,
+				expectedResponseLength
+			);
+			assert.deepStrictEqual(actual.responses["418"], {
 				description: "I'm a teapot",
 				content: {
-					418: {
-						"application/json": operations.listUserWidgets.output,
-					},
+					"application/json": operations.listUserWidgets.output,
 				},
 			});
 		}
 	);
+
+	await t.test("does not include the path if it was specified", async () => {
+		const actual = await transformer.transformQueryOperation(
+			"listUserWidgets",
+			{
+				...operations.listUserWidgets,
+				path: "/widgets",
+			}
+		);
+
+		console.log({ actual });
+		// @ts-expect-error path should not be included
+		assert.strictEqual(actual.path, undefined);
+	});
 });

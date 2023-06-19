@@ -8,7 +8,6 @@ import {
 	RPCInputObject,
 	RPCOperationObject,
 	RPCOutputObject,
-	ResponseObject,
 	ResponsesObject,
 	isReferenceObject,
 } from "../types/index.js";
@@ -17,10 +16,6 @@ import {
 	TransformOutput,
 	transformRPCInputs,
 } from "./parameter-transformer.js";
-
-const DEFAULT_RESPONSE: ResponseObject = {
-	description: "OK",
-};
 
 type TransformerDeps = {
 	resolver: IRefResolver;
@@ -100,7 +95,18 @@ export class OperationTransformer {
 			{ operationId, operation, parameterDefaults },
 			`Transforming operation "${operationId}"`
 		);
-		const { description, input, output, errors, ...rest } = operation;
+		const {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			path: _path,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			method: _method,
+
+			description,
+			input,
+			output,
+			errors,
+			...rest
+		} = operation;
 
 		let transformedInputs: TransformOutput | undefined;
 		let responses: ResponsesObject | undefined;
@@ -127,7 +133,7 @@ export class OperationTransformer {
 
 		return {
 			operationId,
-			description,
+			...(description ? { description } : {}),
 			...transformedInputs,
 			responses,
 			...rest,
@@ -150,7 +156,12 @@ export class OperationTransformer {
 			? await this.resolver.resolve(schemaOrRef)
 			: schemaOrRef;
 
-		return transformRPCInputs(inputSchema, defaults, parameterOverrides);
+		return transformRPCInputs(
+			schemaOrRef,
+			inputSchema,
+			defaults,
+			parameterOverrides
+		);
 	}
 
 	private transformOperationResponses(
@@ -167,7 +178,7 @@ export class OperationTransformer {
 							"application/json": mediaType,
 						},
 				  }
-				: DEFAULT_RESPONSE;
+				: { description };
 
 		return {
 			[statusCode]: successResponse,

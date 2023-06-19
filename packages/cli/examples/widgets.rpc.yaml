@@ -30,9 +30,12 @@ operations:
   mutations:
     createWidget:
       description: Create a widget
+      path: /v1/widgets
       input:
         schema: { $ref: "#/components/schemas/CreateWidgetInput" }
       output:
+        description: Widget created successfully
+        statusCode: 201
         schema: { $ref: "#/components/schemas/Widget" }
       errors:
         400: { $ref: "#/components/responses/BadRequest" }
@@ -43,6 +46,7 @@ operations:
       input:
         schema: { $ref: "#/components/schemas/DeactivateWidgetInput" }
       output:
+        description: Widget successfully deactivated
         schema: { $ref: "#/components/schemas/Widget" }
       errors:
         400: { $ref: "#/components/responses/BadRequest" }

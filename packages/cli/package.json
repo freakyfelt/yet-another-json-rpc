@@ -33,7 +33,7 @@
   "scripts": {
     "build": "tsup-node src/index.ts",
     "build:check": "tsc --noEmit",
-    "build:examples": "npm run build && npm run build:examples:yaml && npm run build:examples:json",
+    "build:examples": "npm run build:examples:yaml && npm run build:examples:json",
     "build:examples:yaml": "bin/yarpc-cli.mjs -i examples/widgets.rpc.yaml -o examples/widgets.oas.yaml -f yaml",
     "build:examples:json": "bin/yarpc-cli.mjs -i examples/widgets.rpc.yaml -o examples/widgets.oas.json -f json",
     "ci": "npm run build:check && npm run lint:check && npm run test:node && npm run format:check",
@@ -45,7 +45,8 @@
     "lint:check": "eslint . --cache --ext .ts",
     "pretest": "npm run lint && tsc --noEmit",
     "test": "npm run build:check && npm run test:node",
-    "test:node": "node --loader ts-node/esm --test src/*.test.ts",
+    "test:node": "npm run test:only -- src/**/*.test.ts",
+    "test:only": "node --loader ts-node/esm --test",
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
