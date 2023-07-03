@@ -10,10 +10,6 @@
   },
   "ts-node": {
     "files": true,
-    "transpileOnly": true,
-    "compilerOptions": {
-      "module": "Node16",
-      "moduleResolution": "node16"
-    }
+    "transpileOnly": true
   }
 }
