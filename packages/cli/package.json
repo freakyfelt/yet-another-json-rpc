@@ -52,7 +52,7 @@
   "devDependencies": {
     "@sinclair/typebox": "^0.29.1",
     "@tsconfig/node18": "^2.0.1",
-    "@types/node": "^18.16.18",
+    "@types/node": "^18.16.19",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "eslint": "^8.44.0",
