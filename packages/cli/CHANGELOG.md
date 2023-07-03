@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/freakyfelt/yet-another-json-rpc/compare/cli-v1.0.0...cli@v1.0.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* **cli:** drop redundant package-lock.json ([980ca8a](https://github.com/freakyfelt/yet-another-json-rpc/commit/980ca8ab5a0554bfd48d03e6e7107a9538904af6))
+
 ## 1.0.0 (2023-06-19)
 
 
