@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import test from "node:test";
-import pino from "pino";
+import { pino } from "pino";
 import {
 	components,
 	mutations,

@@ -1,4 +1,4 @@
-import { ParameterLocation } from "openapi3-ts/oas31.js";
+import { ParameterLocation } from "openapi3-ts/oas31";
 import {
 	HttpMethod,
 	MediaTypeObject,

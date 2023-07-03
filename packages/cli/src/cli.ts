@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
-import pino from "pino";
+import { pino } from "pino";
 import YAML from "yaml";
-import { DocumentTransformer } from "./transformers";
-import { Logger, RPCDocument } from "./types";
+import { DocumentTransformer } from "./transformers/index.js";
+import { Logger, RPCDocument } from "./types/index.js";
 
 const DEFAULT_OUT_PATH = "openapi.json";
 const SUPPORTED_FORMATS = ["json", "yaml"] as const;

@@ -3,7 +3,7 @@ import {
 	MutationOperationObject,
 	OperationObject,
 	QueryOperationObject,
-} from "../types";
+} from "../types/index.js";
 import { schemas } from "./schemas.js";
 
 const createWidget: MutationOperationObject = {
