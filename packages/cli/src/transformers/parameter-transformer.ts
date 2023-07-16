@@ -63,11 +63,11 @@ export function transformRPCInputs(
 	schemaOrRef: SchemaObject | ReferenceObject,
 	inputSchema: SchemaObject,
 	defaults: ParameterDefaults,
-	overrides: RPCParametersObject = {}
+	overrides: RPCParametersObject = {},
 ): TransformOutput {
 	assertObjectTypeSchema(
 		inputSchema,
-		"input schema must be an object type with properties"
+		"input schema must be an object type with properties",
 	);
 
 	if (Object.keys(overrides).length === 0 && defaults.in === "body") {

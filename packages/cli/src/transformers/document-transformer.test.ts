@@ -27,7 +27,7 @@ const healthCheck = {
 };
 
 const conflictingPathName = Object.keys(
-	widgetPaths
+	widgetPaths,
 )[0] as keyof typeof widgetPaths;
 const conflictingPathMethod = Object.keys(widgetPaths[conflictingPathName])[0];
 
@@ -93,7 +93,7 @@ test("DocumentTransformer#transform", async (t) => {
 			await assert.rejects(DocumentTransformer.transform(doc, { logger }), {
 				message: "Unsupported YARPC version: 2.0.0",
 			});
-		}
+		},
 	);
 
 	await t.test("merge same path different HTTP method", async () => {
@@ -175,7 +175,7 @@ test("DocumentTransformer#transform", async (t) => {
 
 		assert.deepStrictEqual(
 			actual.paths?.["/health/deep"],
-			expected.paths["/health/deep"]
+			expected.paths["/health/deep"],
 		);
 	});
 });

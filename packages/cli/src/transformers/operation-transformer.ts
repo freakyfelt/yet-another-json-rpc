@@ -33,7 +33,7 @@ export class OperationTransformer {
 
 	async transformMutationOperation(
 		operationId: string,
-		operation: MutationOperationObject
+		operation: MutationOperationObject,
 	): Promise<OperationObject> {
 		return this.transformOperation(operationId, operation, { in: "body" });
 	}
@@ -81,7 +81,7 @@ export class OperationTransformer {
 	 */
 	async transformQueryOperation(
 		operationId: string,
-		operation: QueryOperationObject
+		operation: QueryOperationObject,
 	): Promise<OperationObject> {
 		return this.transformOperation(operationId, operation, { in: "query" });
 	}
@@ -89,11 +89,11 @@ export class OperationTransformer {
 	private async transformOperation(
 		operationId: string,
 		operation: RPCOperationObject,
-		parameterDefaults: ParameterDefaults
+		parameterDefaults: ParameterDefaults,
 	): Promise<OperationObject> {
 		this.logger?.debug(
 			{ operationId, operation, parameterDefaults },
-			`Transforming operation "${operationId}"`
+			`Transforming operation "${operationId}"`,
 		);
 		const {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -117,7 +117,7 @@ export class OperationTransformer {
 			} catch (err) {
 				throw new Error(
 					`Failed to transform input for operation "${operationId}"`,
-					{ cause: err }
+					{ cause: err },
 				);
 			}
 		}
@@ -127,7 +127,7 @@ export class OperationTransformer {
 		} catch (err) {
 			throw new Error(
 				`Failed to transform responses for operation "${operationId}"`,
-				{ cause: err }
+				{ cause: err },
 			);
 		}
 
@@ -142,14 +142,14 @@ export class OperationTransformer {
 
 	private async transformInput(
 		input: RPCInputObject,
-		defaults: ParameterDefaults
+		defaults: ParameterDefaults,
 	): Promise<TransformOutput> {
 		this.logger?.debug({ input, defaults }, "Transforming input");
 
 		const { schema: schemaOrRef, parameters: parameterOverrides = {} } = input;
 		assert(
 			typeof schemaOrRef === "object",
-			"Query input schema must be an object"
+			"Query input schema must be an object",
 		);
 
 		const inputSchema = isReferenceObject(schemaOrRef)
@@ -160,13 +160,13 @@ export class OperationTransformer {
 			schemaOrRef,
 			inputSchema,
 			defaults,
-			parameterOverrides
+			parameterOverrides,
 		);
 	}
 
 	private transformOperationResponses(
 		output: RPCOutputObject = {},
-		errors: ResponsesObject = {}
+		errors: ResponsesObject = {},
 	): OperationObject["responses"] {
 		const { description = "OK", statusCode = 200, ...mediaType } = output;
 

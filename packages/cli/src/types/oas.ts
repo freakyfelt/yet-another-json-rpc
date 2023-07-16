@@ -29,7 +29,7 @@ export const HttpMethods = [
 export type HttpMethod = (typeof HttpMethods)[number];
 
 export function isReferenceObject(
-	obj: ReferenceObject | SchemaObject
+	obj: ReferenceObject | SchemaObject,
 ): obj is ReferenceObject {
 	return "$ref" in obj;
 }
@@ -41,7 +41,7 @@ export type ObjectTypeSchema = SchemaObject & {
 
 export function assertObjectTypeSchema(
 	schema: SchemaObject,
-	msg?: string
+	msg?: string,
 ): asserts schema is ObjectTypeSchema {
 	if (schema.type !== "object") {
 		throw new Error(msg ?? "Expected schema to be an object");
@@ -52,7 +52,7 @@ export function assertObjectTypeSchema(
 }
 
 export interface OASDocument<
-	TComponents extends ComponentsObject = ComponentsObject
+	TComponents extends ComponentsObject = ComponentsObject,
 > extends Omit<OpenAPIObject, "components"> {
 	components: TComponents;
 }

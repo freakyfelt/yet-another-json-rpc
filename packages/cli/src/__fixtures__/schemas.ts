@@ -13,7 +13,7 @@ const WidgetID = Type.String({
 });
 const WidgetStatus = Type.Union(
 	[Type.Literal("ACTIVE"), Type.Literal("INACTIVE")],
-	{ $id: "#/components/schemas/WidgetStatus" }
+	{ $id: "#/components/schemas/WidgetStatus" },
 );
 
 const Widget = Type.Object(
@@ -22,7 +22,7 @@ const Widget = Type.Object(
 		userId: Type.Ref(UserID),
 		status: Type.Ref(WidgetStatus),
 	},
-	{ $id: "#/components/schemas/Widget" }
+	{ $id: "#/components/schemas/Widget" },
 );
 
 const CreateWidgetInput = Type.Pick(Widget, ["userId", "status"]);
