@@ -22,7 +22,7 @@ type TransformerOptions = {
 export class DocumentTransformer {
 	static transform(
 		doc: RPCDocument,
-		opts: TransformerOptions = {}
+		opts: TransformerOptions = {},
 	): Promise<OASDocument> {
 		return new DocumentTransformer(doc, opts).transform();
 	}
@@ -67,7 +67,7 @@ export class DocumentTransformer {
 	}
 
 	private async rpcToPaths(
-		rpc: RPCDocument["operations"]
+		rpc: RPCDocument["operations"],
 	): Promise<PathsObject> {
 		const paths: PathsObject = {};
 
@@ -76,32 +76,32 @@ export class DocumentTransformer {
 			const path = operation.path ?? `/queries/${operationId}`;
 			this.logger?.debug(
 				{ operationId, httpMethod, operation, path },
-				"Transforming query"
+				"Transforming query",
 			);
 
 			paths[path] = {
 				[httpMethod]: await this.operationTransformer.transformQueryOperation(
 					operationId,
-					operation
+					operation,
 				),
 			};
 		}
 
 		for (const [operationId, operation] of Object.entries(
-			rpc.mutations ?? {}
+			rpc.mutations ?? {},
 		)) {
 			const httpMethod = operation.method ?? "post";
 			const path = operation.path ?? `/mutations/${operationId}`;
 			this.logger?.debug(
 				{ operationId, httpMethod, operation, path },
-				"Transforming mutation"
+				"Transforming mutation",
 			);
 
 			paths[path] = {
 				[httpMethod]:
 					await this.operationTransformer.transformMutationOperation(
 						operationId,
-						operation
+						operation,
 					),
 			};
 		}
@@ -111,7 +111,7 @@ export class DocumentTransformer {
 
 	private deepMergePaths(
 		paths: PathsObject,
-		otherPaths: PathsObject
+		otherPaths: PathsObject,
 	): PathsObject {
 		this.logger?.debug({ paths, otherPaths }, "Merging paths");
 
@@ -129,12 +129,12 @@ export class DocumentTransformer {
 			// detect and report overlapping path+method
 			const duplicate = intersect(
 				Object.keys(httpOperations),
-				Object.keys(mergedPaths[path])
+				Object.keys(mergedPaths[path]),
 			);
 			if (duplicate.length > 0) {
 				this.logger?.warn(
 					{ path, duplicate },
-					"Duplicate operation(s) will be overwritten"
+					"Duplicate operation(s) will be overwritten",
 				);
 			}
 

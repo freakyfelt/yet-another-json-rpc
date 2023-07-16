@@ -5,7 +5,7 @@ import type {
 } from "./operations.js";
 
 export interface RPCDocument<
-	TComponents extends ComponentsObject = ComponentsObject
+	TComponents extends ComponentsObject = ComponentsObject,
 > extends Omit<OASDocument<TComponents>, "openapi"> {
 	yarpc: "1.0.0";
 	operations: {

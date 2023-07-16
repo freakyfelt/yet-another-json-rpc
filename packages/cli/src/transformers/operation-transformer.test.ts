@@ -33,9 +33,9 @@ test("OperationTransformer#transformMutationOperation", async (t) => {
 		assert.deepStrictEqual(
 			await transformer.transformMutationOperation(
 				"createWidget",
-				operations.createWidget
+				operations.createWidget,
 			),
-			createWidgetOAS
+			createWidgetOAS,
 		);
 	});
 
@@ -54,7 +54,7 @@ test("OperationTransformer#transformMutationOperation", async (t) => {
 							},
 						},
 					},
-				}
+				},
 			);
 
 			const expectedParameters = [
@@ -82,7 +82,7 @@ test("OperationTransformer#transformMutationOperation", async (t) => {
 
 			assert.deepStrictEqual(actual.parameters, expectedParameters);
 			assert.deepStrictEqual(actual.requestBody, expectedRequestBody);
-		}
+		},
 	);
 });
 
@@ -90,7 +90,7 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 	await t.test("transforms a query operation", async () => {
 		const actual = await transformer.transformQueryOperation(
 			"listUserWidgets",
-			operations.listUserWidgets
+			operations.listUserWidgets,
 		);
 		assert.deepStrictEqual(actual, listUserWidgetsOAS);
 	});
@@ -117,7 +117,7 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 							},
 						},
 					},
-				}
+				},
 			);
 
 			const expectedByName: Record<string, ParameterObject> =
@@ -127,7 +127,7 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 						...acc,
 						[(param as ParameterObject).name]: param,
 					}),
-					{}
+					{},
 				);
 			expectedByName.status = {
 				name: "status",
@@ -150,11 +150,11 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const actualByName = actual.parameters!.reduce(
 				(acc, param) => ({ ...acc, [(param as ParameterObject).name]: param }),
-				{}
+				{},
 			);
 
 			assert.deepStrictEqual(actualByName, expectedByName);
-		}
+		},
 	);
 
 	await t.test(
@@ -171,15 +171,15 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 						statusCode: 418,
 						description: "I'm a teapot",
 					},
-				}
+				},
 			);
 
 			const expectedResponseLength = Object.keys(
-				listUserWidgetsOAS.responses
+				listUserWidgetsOAS.responses,
 			).length;
 			assert.equal(
 				Object.keys(actual.responses).length,
-				expectedResponseLength
+				expectedResponseLength,
 			);
 			assert.deepStrictEqual(actual.responses["418"], {
 				description: "I'm a teapot",
@@ -187,7 +187,7 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 					"application/json": operations.listUserWidgets.output,
 				},
 			});
-		}
+		},
 	);
 
 	await t.test("does not include the path if it was specified", async () => {
@@ -196,7 +196,7 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 			{
 				...operations.listUserWidgets,
 				path: "/widgets",
-			}
+			},
 		);
 
 		console.log({ actual });
