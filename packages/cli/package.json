@@ -50,7 +50,7 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
-    "@sinclair/typebox": "^0.29.6",
+    "@sinclair/typebox": "^0.30.0",
     "@tsconfig/node18": "^18.2.0",
     "@types/node": "^18.17.1",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
