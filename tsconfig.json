@@ -1,8 +1,7 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": ".",
-    "baseUrl": "."
+  "ts-node": {
+    "files": true,
+    "transpileOnly": true
   }
 }

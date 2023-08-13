@@ -46,13 +46,13 @@ operations:
     getWidget:
       description: Gets the widget identified by the provided widgetId
       input:
-        schema: { $ref: '#/components/schemas/GetWidgetInput' }
+        schema: { $ref: "#/components/schemas/GetWidgetInput" }
       output:
-        schema: { $ref: '#/components/schemas/Widgets' }
+        schema: { $ref: "#/components/schemas/Widgets" }
       errors:
-        401: { $ref: '#/components/responses/InvalidCredentials' }
-        403: { $ref: '#/components/responses/NotAuthorized' }
-        404: { $ref: '#/components/responses/NotFound' }
+        401: { $ref: "#/components/responses/InvalidCredentials" }
+        403: { $ref: "#/components/responses/NotAuthorized" }
+        404: { $ref: "#/components/responses/NotFound" }
 ```
 
 By default this will generate an OpenAPI path item under `/queries/${operationId}.get` with all inputs mapped to `query` parameters and the output mapped to an HTTP 200 response with a content type of `application/json`.
@@ -70,18 +70,19 @@ paths:
         - name: widgetId
           in: query
           schema:
-            $ref: '#/components/schemas/GetWidgetInput/properties/widgetId'
+            $ref: "#/components/schemas/GetWidgetInput/properties/widgetId"
           required: true
       responses:
         200:
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Widget' }
-        401: { $ref: '#/components/responses/InvalidCredentials' }
-        403: { $ref: '#/components/responses/NotAuthorized' }
-        404: { $ref: '#/components/responses/NotFound' }
+              schema: { $ref: "#/components/schemas/Widget" }
+        401: { $ref: "#/components/responses/InvalidCredentials" }
+        403: { $ref: "#/components/responses/NotAuthorized" }
+        404: { $ref: "#/components/responses/NotFound" }
 ```
+
 </details>
 
 <details>
@@ -99,6 +100,7 @@ paths:
   "createdAt": "2023-01-02T03:04:05Z"
 }
 ```
+
 </details>
 
 ### Mutation operations
@@ -111,13 +113,13 @@ operations:
     createWidget:
       description: Creates the specified widget
       input:
-        schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+        schema: { $ref: "#/components/schemas/CreateWidgetInput" }
       output:
-        schema: { $ref: '#/components/schemas/Widget' }
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
-        401: { $ref: '#/components/responses/InvalidCredentials' }
-        403: { $ref: '#/components/responses/NotAuthorized' }
-        422: { $ref: '#/components/responses/InvalidRequest' }
+        401: { $ref: "#/components/responses/InvalidCredentials" }
+        403: { $ref: "#/components/responses/NotAuthorized" }
+        422: { $ref: "#/components/responses/InvalidRequest" }
 ```
 
 By default this will generate an OpenAPI path item under `paths['/mutations/${operationId}'].post` with the input being mapped to the `application/json` content type for the `requestBody` and the output mapped to an HTTP 200 response with a content type of `application/json`.
@@ -134,17 +136,18 @@ paths:
       requestBody:
         required: true
         application/json:
-          schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+          schema: { $ref: "#/components/schemas/CreateWidgetInput" }
       responses:
         200:
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Widget' }
-        401: { $ref: '#/components/responses/InvalidCredentials' }
-        403: { $ref: '#/components/responses/NotAuthorized' }
-        404: { $ref: '#/components/responses/NotFound' }
+              schema: { $ref: "#/components/schemas/Widget" }
+        401: { $ref: "#/components/responses/InvalidCredentials" }
+        403: { $ref: "#/components/responses/NotAuthorized" }
+        404: { $ref: "#/components/responses/NotFound" }
 ```
+
 </details>
 
 <details>
@@ -160,6 +163,7 @@ paths:
   "arg1": "val1"
 }
 ```
+
 </details>
 
 ## Getting started
@@ -181,8 +185,7 @@ Some notes:
 - The output schema can be any JSON Schema
 - Errors should be defined as standard [OpenAPI responses][oas:response-object], usually with a content type of `application/json`
 
-> **Note**
-> **It is strongly recommended to use an outer `object` for your response schema**, even if you are returning an array (use an `items` key for example) so that you can extend it in the future (think pagination). That being said, the tooling won't stop you from using primitive schemas for the response.
+> **Note** > **It is strongly recommended to use an outer `object` for your response schema**, even if you are returning an array (use an `items` key for example) so that you can extend it in the future (think pagination). That being said, the tooling won't stop you from using primitive schemas for the response.
 
 <details>
   <summary>Example OpenAPI schema components</summary>
@@ -196,10 +199,10 @@ components:
       format: date-time
     UserID:
       type: string
-      pattern: '^u-[A-z0-9]{12}$'
+      pattern: "^u-[A-z0-9]{12}$"
     WidgetID:
       type: string
-      pattern: '^w-[A-z0-9]{12}$'
+      pattern: "^w-[A-z0-9]{12}$"
     WidgetStatus:
       anyOf:
         - active
@@ -208,36 +211,37 @@ components:
     # Domain objects
     Widget:
       type: object
-      required: ['id', 'createdAt']
+      required: ["id", "createdAt"]
       properties:
-        id: { $ref: '#/components/schemas/WidgetID' }
-        userId: { $ref: '#/components/schemas/UserID' }
-        status: { $ref: '#/components/schemas/WidgetStatus' }
-        createdAt: { $ref: '#/components/schemas/ISO8601Timestamp' }
-    
+        id: { $ref: "#/components/schemas/WidgetID" }
+        userId: { $ref: "#/components/schemas/UserID" }
+        status: { $ref: "#/components/schemas/WidgetStatus" }
+        createdAt: { $ref: "#/components/schemas/ISO8601Timestamp" }
+
     # Inputs / Outputs
     GetWidgetInput:
       type: object
-      required: ['widgetId']
+      required: ["widgetId"]
       properties:
-        widgetId: { $ref: '#/components/schemas/WidgetID' }
+        widgetId: { $ref: "#/components/schemas/WidgetID" }
     CreateWidgetInput:
       type: object
-      required: ['status', 'userId']
+      required: ["status", "userId"]
       properties:
-        userId: { $ref: '#/components/schemas/UserID' }
-    
+        userId: { $ref: "#/components/schemas/UserID" }
+
     # Error shape used by all error responses
     Error:
       type: object
-      required: ['code', 'message']
+      required: ["code", "message"]
       properties:
-        code: { type: 'string' }
-        message: { type: 'string' }
+        code: { type: "string" }
+        message: { type: "string" }
         details:
           type: object
           allowAdditionalProperties: true
 ```
+
 </details>
 
 ### Define error responses
@@ -256,29 +260,30 @@ components:
       description: The resource was not found (HTTP 404)
       content:
         application/json:
-          schema: { $ref: '#/components/schemas/Error' }
+          schema: { $ref: "#/components/schemas/Error" }
     InvalidCredentials:
       description: The request lacks valid credentials (HTTP 401)
       content:
         application/json:
-          schema: { $ref: '#/components/schemas/Error' }
+          schema: { $ref: "#/components/schemas/Error" }
     NotAuthorized:
       description: The request lacks sufficient credentials (HTTP 403)
       content:
         application/json:
-          schema: { $ref: '#/components/schemas/Error' }
+          schema: { $ref: "#/components/schemas/Error" }
 
     TooManyRequests:
       description: Too many requests were sent in a given amount of time (HTTP 429)
       headers:
         Retry-After:
           description: Seconds to wait before retrying the request
-          schema: { type: 'integer' }
+          schema: { type: "integer" }
           required: true
       content:
         application/json:
-          schema: { $ref: '#/components/schemas/Error' }
+          schema: { $ref: "#/components/schemas/Error" }
 ```
+
 </details>
 
 ### Define operations
@@ -299,14 +304,14 @@ operations:
     getWidget:
       description: Gets the widget identified by the provided widgetId
       input:
-        schema: { $ref: '#/components/schemas/GetWidgetInput' }
+        schema: { $ref: "#/components/schemas/GetWidgetInput" }
       output:
         # the standard shape of a media type object
-        schema: { $ref: '#/components/schemas/Widget' }
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
-        401: { $ref: '#/components/schemas/InvalidCredentials' }
-        403: { $ref: '#/components/schemas/NotAuthorized' }
-        404: { $ref: '#/components/schemas/NotFound' }
+        401: { $ref: "#/components/schemas/InvalidCredentials" }
+        403: { $ref: "#/components/schemas/NotAuthorized" }
+        404: { $ref: "#/components/schemas/NotFound" }
 ```
 
 ## Generating the resulting OpenAPI specification
@@ -349,13 +354,13 @@ operations:
   queries:
     listWidgets:
       input:
-        schema: { $ref: '#/components/schemas/ListWidgetsInput' }
+        schema: { $ref: "#/components/schemas/ListWidgetsInput" }
         parameters:
           status:
             description: 'Use "statuses" instead'
             deprecated: true
       output:
-        schema: { $ref: '#/components/schemas/ListWidgetsOutput' }
+        schema: { $ref: "#/components/schemas/ListWidgetsOutput" }
 
       errors: []
 ```
@@ -394,14 +399,14 @@ operations:
       description: Creates the specified widget
 
       input:
-        schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+        schema: { $ref: "#/components/schemas/CreateWidgetInput" }
       output:
         description: Widget created without issue
         statusCode: 201
-        schema: { $ref: '#/components/schemas/Widget' }
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
-        400: { $ref: '#/components/responses/BadRequest' }
-        404: { $ref: '#/components/responses/NotFound' }
+        400: { $ref: "#/components/responses/BadRequest" }
+        404: { $ref: "#/components/responses/NotFound" }
 ```
 
 This will result in the following paths object:
@@ -418,16 +423,17 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CreateWidgetInput' }
+            schema: { $ref: "#/components/schemas/CreateWidgetInput" }
       responses:
         201:
           description: Widget created without issue
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Widget' }
-        400: { $ref: '#/components/responses/BadRequest' }
-        404: { $ref: '#/components/responses/NotFound' }
+              schema: { $ref: "#/components/schemas/Widget" }
+        400: { $ref: "#/components/responses/BadRequest" }
+        404: { $ref: "#/components/responses/NotFound" }
 ```
+
 </details>
 
 ### Changing the HTTP method and URL
@@ -448,15 +454,15 @@ operations:
       path: /v1/widgets/{widgetId}
 
       input:
-        schema: { $ref: '#/components/schemas/ModifyWidgetInput' }
+        schema: { $ref: "#/components/schemas/ModifyWidgetInput" }
         parameters:
           widgetId:
             in: path
       output:
-        schema: { $ref: '#/components/schemas/Widget' }
+        schema: { $ref: "#/components/schemas/Widget" }
       errors:
-        400: { $ref: '#/components/responses/BadRequest' }
-        404: { $ref: '#/components/responses/NotFound' }
+        400: { $ref: "#/components/responses/BadRequest" }
+        404: { $ref: "#/components/responses/NotFound" }
 ```
 
 This will result in the following `paths` object:
@@ -483,6 +489,7 @@ paths:
               userId: { $ref: '#/components/schemas/UserID' }
               ...
 ```
+
 </details>
 
 ## Why not GraphQL?
