@@ -177,7 +177,7 @@ export class OperationTransformer {
 						content: {
 							"application/json": mediaType,
 						},
-				  }
+					}
 				: { description };
 
 		return {
