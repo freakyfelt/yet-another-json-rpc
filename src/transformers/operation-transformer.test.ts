@@ -175,13 +175,13 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 			);
 
 			const expectedResponseLength = Object.keys(
-				listUserWidgetsOAS.responses,
+				listUserWidgetsOAS.responses!,
 			).length;
 			assert.equal(
-				Object.keys(actual.responses).length,
+				Object.keys(actual.responses!).length,
 				expectedResponseLength,
 			);
-			assert.deepStrictEqual(actual.responses["418"], {
+			assert.deepStrictEqual(actual.responses!["418"], {
 				description: "I'm a teapot",
 				content: {
 					"application/json": operations.listUserWidgets.output,
