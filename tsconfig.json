@@ -2,6 +2,6 @@
   "extends": "@tsconfig/node18/tsconfig.json",
   "ts-node": {
     "files": true,
-    "transpileOnly": true,
-  },
+    "transpileOnly": true
+  }
 }
