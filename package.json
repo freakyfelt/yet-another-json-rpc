@@ -48,7 +48,7 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
-    "@sinclair/typebox": "^0.32.32",
+    "@sinclair/typebox": "^0.32.33",
     "@tsconfig/node18": "^18.2.4",
     "@types/node": "^18.19.34",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
@@ -62,7 +62,7 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "ts-node": "^10.9.2",
     "tsup": "^8.1.0",
-    "type-fest": "^4.20.0",
+    "type-fest": "^4.20.1",
     "typescript": "^5.4.5"
   },
   "lint-staged": {
