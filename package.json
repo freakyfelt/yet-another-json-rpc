@@ -50,7 +50,7 @@
   "devDependencies": {
     "@sinclair/typebox": "^0.32.33",
     "@tsconfig/node18": "^18.2.4",
-    "@types/node": "^18.19.37",
+    "@types/node": "^18.19.38",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^8.57.0",
@@ -63,7 +63,7 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.1.0",
     "type-fest": "^4.20.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
