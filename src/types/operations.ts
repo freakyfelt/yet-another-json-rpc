@@ -100,8 +100,8 @@ export interface RPCOperationObject
  * @todo add support for overriding the path
  *
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface QueryOperationObject extends RPCOperationObject {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface MutationOperationObject extends RPCOperationObject {}
