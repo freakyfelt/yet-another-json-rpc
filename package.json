@@ -48,12 +48,12 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
-    "@sinclair/typebox": "^0.33.10",
+    "@sinclair/typebox": "^0.33.11",
     "@tsconfig/node18": "^18.2.4",
     "@types/node": "^18.19.50",
     "@typescript-eslint/eslint-plugin": "^8.5.0",
     "@typescript-eslint/parser": "^8.5.0",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "just-safe-get": "^4.2.0",
     "lint-staged": "^15.2.10",
