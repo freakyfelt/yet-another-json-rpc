@@ -63,7 +63,7 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.3.0",
     "type-fest": "^4.26.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
