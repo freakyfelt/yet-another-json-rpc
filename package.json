@@ -71,7 +71,7 @@
   "dependencies": {
     "just-intersect": "^4.3.0",
     "pino": "^9.4.0",
-    "pino-pretty": "^11.2.2",
+    "pino-pretty": "^11.3.0",
     "yaml": "^2.6.0"
   }
 }
