@@ -18,9 +18,9 @@ const WidgetStatus = Type.Union(
 
 const Widget = Type.Object(
 	{
-		id: Type.Ref(WidgetID),
-		userId: Type.Ref(UserID),
-		status: Type.Ref(WidgetStatus),
+		id: Type.Ref(WidgetID.$id!),
+		userId: Type.Ref(UserID.$id!),
+		status: Type.Ref(WidgetStatus.$id!),
 	},
 	{ $id: "#/components/schemas/Widget" },
 );
@@ -28,13 +28,13 @@ const Widget = Type.Object(
 const CreateWidgetInput = Type.Pick(Widget, ["userId", "status"]);
 
 const ListUserWidgetsInput = Type.Object({
-	userId: Type.Ref(UserID),
-	status: Type.Optional(Type.Array(Type.Ref(WidgetStatus))),
+	userId: Type.Ref(UserID.$id!),
+	status: Type.Optional(Type.Array(Type.Ref(WidgetStatus.$id!))),
 	limit: Type.Optional(Type.Integer()),
 });
 
 const ListWidgetsOutput = Type.Object({
-	items: Type.Array(Type.Ref(Widget)),
+	items: Type.Array(Type.Ref(Widget.$id!)),
 	pageInfo: Type.Object({
 		hasNextPage: Type.Boolean(),
 		lastCursor: Type.Optional(Type.String()),
