@@ -1,4 +1,5 @@
 {
+  "bootstrap-sha": "5c057c03809d9f5b0dc87c1ba53aa749db454132",
   "packages": {
     ".": {
       "package-name": "@freakyfelt/yarpc-cli",

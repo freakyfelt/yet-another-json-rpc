@@ -19,3 +19,7 @@ updates:
     groups:
       development:
         dependency-type: "development"
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
