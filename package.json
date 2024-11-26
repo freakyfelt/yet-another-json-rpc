@@ -48,21 +48,21 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
-    "@sinclair/typebox": "^0.34.8",
+    "@sinclair/typebox": "^0.34.9",
     "@tsconfig/node18": "^18.2.4",
-    "@types/node": "^18.19.65",
-    "@typescript-eslint/eslint-plugin": "^8.15.0",
-    "@typescript-eslint/parser": "^8.15.0",
+    "@types/node": "^18.19.66",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "just-safe-get": "^4.2.0",
     "lint-staged": "^15.2.10",
     "openapi3-ts": "^4.4.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "prettier-plugin-organize-imports": "^4.1.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.3.5",
-    "type-fest": "^4.28.0",
+    "type-fest": "^4.28.1",
     "typescript": "^5.7.2"
   },
   "lint-staged": {
