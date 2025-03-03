@@ -50,7 +50,7 @@
   "devDependencies": {
     "@sinclair/typebox": "^0.34.28",
     "@tsconfig/node18": "^18.2.4",
-    "@types/node": "^18.19.76",
+    "@types/node": "^18.19.78",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "eslint": "^8.57.1",
@@ -58,12 +58,12 @@
     "just-safe-get": "^4.2.0",
     "lint-staged": "^15.4.3",
     "openapi3-ts": "^4.4.0",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",
-    "type-fest": "^4.35.0",
-    "typescript": "^5.7.3"
+    "type-fest": "^4.36.0",
+    "typescript": "^5.8.2"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
