@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/freakyfelt/yet-another-json-rpc/compare/v1.0.0...v2.0.0) (2025-06-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* (deps) increase minimum supported version to Node v20.17.0 ([#572](https://github.com/freakyfelt/yet-another-json-rpc/issues/572))
+
+### Bug Fixes
+
+* (deps) increase minimum supported version to Node v20.17.0 ([#572](https://github.com/freakyfelt/yet-another-json-rpc/issues/572)) ([bba1c7c](https://github.com/freakyfelt/yet-another-json-rpc/commit/bba1c7c4bab85854a7d2aa5f65f2f2305f2ed138))
+* **deps:** bump pino from 9.5.0 to 9.6.0 ([#497](https://github.com/freakyfelt/yet-another-json-rpc/issues/497)) ([75b3fd3](https://github.com/freakyfelt/yet-another-json-rpc/commit/75b3fd331c6d56d110d69b640cc5988f6780ec05))
+* **deps:** bump pino from 9.6.0 to 9.7.0 ([#560](https://github.com/freakyfelt/yet-another-json-rpc/issues/560)) ([2a206e1](https://github.com/freakyfelt/yet-another-json-rpc/commit/2a206e1ebcebeeda11679a2b11ac09c45712fa7d))
+* **deps:** bump yaml from 2.6.0 to 2.6.1 ([#480](https://github.com/freakyfelt/yet-another-json-rpc/issues/480)) ([e643b7c](https://github.com/freakyfelt/yet-another-json-rpc/commit/e643b7c3d8306062db1556ca64efdf6131ecaeaa))
+* **deps:** bump yaml from 2.6.1 to 2.7.0 ([#502](https://github.com/freakyfelt/yet-another-json-rpc/issues/502)) ([11228a6](https://github.com/freakyfelt/yet-another-json-rpc/commit/11228a6e2168a69ad0ba50dccdd322b2624ccb52))
+* **deps:** bump yaml from 2.7.0 to 2.7.1 ([#538](https://github.com/freakyfelt/yet-another-json-rpc/issues/538)) ([8617246](https://github.com/freakyfelt/yet-another-json-rpc/commit/8617246fb271071ca4845f410fc95248ea89e38d))
+* **deps:** bump yaml from 2.7.1 to 2.8.0 ([#557](https://github.com/freakyfelt/yet-another-json-rpc/issues/557)) ([cf34a95](https://github.com/freakyfelt/yet-another-json-rpc/commit/cf34a950ac47dfe512dcb056e6c4602bebdf267b))
+
 ## 1.0.0 (2024-02-24)
 
 
