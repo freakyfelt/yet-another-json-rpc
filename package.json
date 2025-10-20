@@ -50,9 +50,9 @@
   "devDependencies": {
     "@sinclair/typebox": "^0.34.41",
     "@tsconfig/node20": "^20.1.6",
-    "@types/node": "^20.19.21",
-    "@typescript-eslint/eslint-plugin": "^8.46.0",
-    "@typescript-eslint/parser": "^8.46.0",
+    "@types/node": "^20.19.22",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "just-safe-get": "^4.2.0",
