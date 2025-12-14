@@ -46,8 +46,10 @@ export interface RPCOutputObject extends MediaTypeObject {
 	statusCode?: number;
 }
 
-export interface RPCOperationObject
-	extends Omit<OperationObject, "operationId" | "requestBody" | "responses"> {
+export interface RPCOperationObject extends Omit<
+	OperationObject,
+	"operationId" | "requestBody" | "responses"
+> {
 	method?: HttpMethod;
 	path?: string;
 
