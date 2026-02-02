@@ -62,7 +62,7 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.5.1",
-    "type-fest": "^5.4.1",
+    "type-fest": "^5.4.3",
     "typescript": "^5.9.3"
   },
   "lint-staged": {
