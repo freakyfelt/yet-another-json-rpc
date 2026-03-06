@@ -32,7 +32,7 @@ export interface RPCInputObject extends MediaTypeObject {
 	 */
 	parameters?: RPCParametersObject;
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+
 export interface RPCOutputObject extends MediaTypeObject {
 	/**
 	 * Description of what success means for this operation

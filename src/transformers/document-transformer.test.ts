@@ -112,7 +112,6 @@ test("DocumentTransformer#transform", async (t) => {
 			paths: {
 				...oasDocument.paths,
 				[conflictingPathName]: {
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					...oasDocument.paths![conflictingPathName],
 					patch: conflictingPathOperation,
 				},

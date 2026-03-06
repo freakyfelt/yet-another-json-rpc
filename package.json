@@ -48,6 +48,8 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/js": "^10.0.1",
     "@sinclair/typebox": "^0.34.48",
     "@tsconfig/node20": "^20.1.9",
     "@types/node": "^20.19.35",
