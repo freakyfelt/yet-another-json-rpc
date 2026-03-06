@@ -48,13 +48,10 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.4",
     "@eslint/js": "^10.0.1",
     "@sinclair/typebox": "^0.34.48",
     "@tsconfig/node20": "^20.1.9",
     "@types/node": "^20.19.35",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "just-safe-get": "^4.2.0",
@@ -65,7 +62,8 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.5.1",
     "type-fest": "^5.4.4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
