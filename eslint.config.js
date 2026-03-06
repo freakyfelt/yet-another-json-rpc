@@ -4,13 +4,10 @@ import tseslintPlugin from "@typescript-eslint/eslint-plugin";
 import prettier from "eslint-config-prettier";
 
 export default [
-	// Ignores
 	{
 		ignores: ["**/dist/**", "**/node_modules/**", "*.js", "*.cjs", "*.mjs"],
 	},
-	// Base configs
 	js.configs.recommended,
-	// TypeScript ESLint recommended config
 	{
 		plugins: {
 			"@typescript-eslint": tseslintPlugin,
@@ -24,14 +21,12 @@ export default [
 			},
 		},
 	},
-	// TypeScript ESLint recommended rules
 	{
 		plugins: {
 			"@typescript-eslint": tseslintPlugin,
 		},
 		rules: tseslintPlugin.configs["recommended"].rules,
 	},
-	// TypeScript ESLint recommended-type-checking rules
 	{
 		plugins: {
 			"@typescript-eslint": tseslintPlugin,
@@ -46,9 +41,8 @@ export default [
 		},
 		rules: tseslintPlugin.configs["recommended-requiring-type-checking"].rules,
 	},
-	// Prettier must be last to override other configs
 	prettier,
-	// Project-specific config
+	// Begin project-specific config
 	{
 		files: ["**/*.ts"],
 		plugins: {
