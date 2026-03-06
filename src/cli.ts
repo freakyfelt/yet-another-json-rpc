@@ -6,12 +6,14 @@ import YAML from "yaml";
 import { DocumentTransformer } from "./transformers/index.js";
 import { Logger, RPCDocument } from "./types/index.js";
 
+const { console, process } = globalThis;
+
 const DEFAULT_OUT_PATH = "openapi.json";
 const SUPPORTED_FORMATS = ["json", "yaml"] as const;
 type SupportedFormat = (typeof SUPPORTED_FORMATS)[number];
 
 function showHelp() {
-	console.log(`
+	process.stderr.write(`
 Usage: yarpc-cli [options]
 
 Options:

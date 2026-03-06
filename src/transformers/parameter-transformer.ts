@@ -98,10 +98,8 @@ export function transformRPCInputs(
 		if (location === "body") {
 			hasBody ||= true;
 
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			bodySchema.properties![name] = schema;
 			if (inputSchema.required?.includes(name)) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				bodySchema.required!.push(name);
 			}
 		} else {

@@ -1,7 +1,7 @@
 {
   "clean": true,
   "dts": true,
-  "entry": ["src/index.ts"],
+  "entry": ["src/index.ts", "src/bin/yarpc-cli.ts"],
   "format": ["esm"],
   "sourcemap": true,
   "splitting": false

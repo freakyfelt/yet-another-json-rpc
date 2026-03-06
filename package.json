@@ -17,7 +17,7 @@
   },
   "type": "module",
   "bin": {
-    "yarpc-cli": "./bin/yarpc-cli.mjs"
+    "yarpc-cli": "./dist/bin/yarpc-cli.js"
   },
   "exports": {
     "*": {
@@ -32,8 +32,8 @@
     "build": "tsup-node",
     "build:check": "tsc --noEmit",
     "build:examples": "npm run build:examples:yaml && npm run build:examples:json",
-    "build:examples:yaml": "bin/yarpc-cli.mjs -i examples/widgets.rpc.yaml -o examples/widgets.oas.yaml -f yaml",
-    "build:examples:json": "bin/yarpc-cli.mjs -i examples/widgets.rpc.yaml -o examples/widgets.oas.json -f json",
+    "build:examples:yaml": "node ./dist/bin/yarpc-cli.js -i examples/widgets.rpc.yaml -o examples/widgets.oas.yaml -f yaml",
+    "build:examples:json": "node ./dist/bin/yarpc-cli.js -i examples/widgets.rpc.yaml -o examples/widgets.oas.json -f json",
     "ci": "npm run build:check && npm run lint:check && npm run test:node && npm run format:check",
     "clean": "rm -rf dist",
     "format": "prettier --write .",
@@ -48,22 +48,22 @@
     "posttest": "npm run format && npm run build:examples"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@sinclair/typebox": "^0.34.48",
-    "@tsconfig/node20": "^20.1.8",
-    "@types/node": "^20.19.30",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
-    "eslint": "^8.57.1",
+    "@tsconfig/node20": "^20.1.9",
+    "@types/node": "^20.19.35",
+    "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "just-safe-get": "^4.2.0",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "^16.3.1",
     "openapi3-ts": "^4.5.0",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.3.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.5.1",
-    "type-fest": "^5.4.3",
-    "typescript": "^5.9.3"
+    "type-fest": "^5.4.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"

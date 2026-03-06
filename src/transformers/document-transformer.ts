@@ -38,7 +38,7 @@ export class DocumentTransformer {
 		this.operationTransformer =
 			opts.operationTransformer ??
 			new OperationTransformer({
-				logger: this.logger ?? console,
+				logger: this.logger ?? globalThis.console,
 				resolver: opts.refResolver ?? getDefaultRefResolver(doc),
 			});
 	}

@@ -1,5 +1,6 @@
 import safeGet from "just-safe-get";
 import assert from "node:assert";
+import console from "node:console";
 import test from "node:test";
 import { schemas } from "../__fixtures__/schemas.js";
 import {
@@ -121,7 +122,6 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 			);
 
 			const expectedByName: Record<string, ParameterObject> =
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				listUserWidgetsOAS.parameters!.reduce(
 					(acc, param) => ({
 						...acc,
@@ -147,7 +147,6 @@ test("OperationTransformer#transformQueryOperation", async (t) => {
 				in: "path",
 			};
 
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const actualByName = actual.parameters!.reduce(
 				(acc, param) => ({ ...acc, [(param as ParameterObject).name]: param }),
 				{},
