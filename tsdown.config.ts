@@ -1,16 +1,27 @@
 import { defineConfig } from "tsdown";
 
-export default defineConfig({
-	entry: ["src/index.ts", "src/bin/yarpc-cli.ts"],
-	platform: "node",
-	format: ["esm"],
-	dts: true,
-	clean: true,
-	sourcemap: true,
-	publint: {
-		level: "error",
+export default defineConfig([
+	{
+		entry: ["src/index.ts"],
+		platform: "node",
+		format: ["esm", "cjs"],
+		dts: true,
+		clean: true,
+		sourcemap: true,
+		publint: {
+			enabled: true,
+		},
+		attw: {
+			enabled: true,
+		},
 	},
-	attw: {
-		level: "error",
+	{
+		entry: ["src/bin/yarpc-cli.ts"],
+		platform: "node",
+		format: ["esm"],
+		outDir: "dist/bin",
+		dts: true,
+		clean: false,
+		sourcemap: true,
 	},
-});
+]);
