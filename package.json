@@ -61,7 +61,7 @@
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
     "@eslint/js": "^10.0.1",
-    "@sinclair/typebox": "^0.34.48",
+    "@sinclair/typebox": "^0.34.49",
     "@tsconfig/node20": "^20.1.9",
     "@types/node": "^20.19.37",
     "eslint": "^10.1.0",
@@ -71,10 +71,10 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "publint": "^0.3.18",
     "ts-node": "^10.9.2",
-    "tsdown": "^0.21.3",
+    "tsdown": "^0.21.7",
     "type-fest": "^5.5.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
