@@ -1,7 +1,3 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
-  "ts-node": {
-    "files": true,
-    "transpileOnly": true
-  }
+  "extends": "@tsconfig/node20/tsconfig.json"
 }
