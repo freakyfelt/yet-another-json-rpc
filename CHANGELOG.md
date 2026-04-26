@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.2](https://github.com/freakyfelt/yet-another-json-rpc/compare/v2.0.1...v2.0.2) (2026-04-26)
+
+
+### Bug Fixes
+
+* **deps:** bump picomatch from 4.0.3 to 4.0.4 ([#637](https://github.com/freakyfelt/yet-another-json-rpc/issues/637)) ([fbdeffa](https://github.com/freakyfelt/yet-another-json-rpc/commit/fbdeffac7ad821d5e7824424bd043b3a9822c912))
+* **deps:** bump yaml from 2.8.2 to 2.8.3 ([#636](https://github.com/freakyfelt/yet-another-json-rpc/issues/636)) ([9f5d9c2](https://github.com/freakyfelt/yet-another-json-rpc/commit/9f5d9c2ebffc3a6276f8812d69fc72860664315c))
+
 ## [2.0.1](https://github.com/freakyfelt/yet-another-json-rpc/compare/v2.0.0...v2.0.1) (2026-03-20)
 
 
