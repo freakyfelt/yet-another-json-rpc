@@ -70,11 +70,11 @@
     "prettier": "^3.8.3",
     "prettier-plugin-organize-imports": "^4.3.0",
     "publint": "^0.3.21",
-    "tsx": "^4.22.2",
+    "tsx": "^4.22.3",
     "tsdown": "^0.22.0",
     "type-fest": "^5.6.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.4"
+    "typescript-eslint": "^8.60.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
