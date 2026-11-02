@@ -14,12 +14,18 @@ updates:
     labels:
       - dependencies
     ignore:
+      # Keep @types/node aligned with the Node 22 engines floor.
       - dependency-name: "@types/node"
         versions: ">=23.0.0"
-      - dependency-name: "typescript"
-        update-types:
-          - "version-update:semver-major"
     groups:
+      production-pino:
+        patterns:
+          - "pino"
+          - "pino-*"
+        update-types:
+          - "minor"
+          - "patch"
+        dependency-type: "production"
       eslint:
         patterns:
           - "eslint"
@@ -27,6 +33,26 @@ updates:
           - "@eslint/*"
           - "typescript-eslint"
           - "@typescript-eslint/*"
+        update-types:
+          - "minor"
+          - "patch"
+        dependency-type: "development"
+      formatting:
+        patterns:
+          - "prettier"
+          - "prettier-plugin-*"
+        update-types:
+          - "minor"
+          - "patch"
+        dependency-type: "development"
+      build:
+        patterns:
+          - "tsdown"
+          - "publint"
+          - "@arethetypeswrong/core"
+        update-types:
+          - "minor"
+          - "patch"
         dependency-type: "development"
       typescript:
         patterns:
@@ -39,6 +65,9 @@ updates:
       development:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
         dependency-type: "development"
     commit-message:
       prefix: fix
