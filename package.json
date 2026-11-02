@@ -64,7 +64,7 @@
     "@sinclair/typebox": "^0.34.49",
     "@tsconfig/node22": "^22.0.6",
     "@types/node": "^22.20.5",
-    "eslint": "^10.6.0",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "lint-staged": "^17.0.8",
     "prettier": "^3.9.4",
@@ -74,7 +74,7 @@
     "tsdown": "^0.22.3",
     "type-fest": "^5.8.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.62.1"
+    "typescript-eslint": "^8.72.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
