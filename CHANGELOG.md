@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0.1](https://github.com/freakyfelt/yet-another-json-rpc/compare/v3.0.0...v3.0.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* **deps:** bump fast-copy from 4.0.0 to 4.3.1 ([#672](https://github.com/freakyfelt/yet-another-json-rpc/issues/672)) ([a65014b](https://github.com/freakyfelt/yet-another-json-rpc/commit/a65014bc33a64b92e63f075f86fd7f177a9ffafa))
+* **deps:** bump pino from 10.3.1 to 10.4.0 ([#673](https://github.com/freakyfelt/yet-another-json-rpc/issues/673)) ([8e2641e](https://github.com/freakyfelt/yet-another-json-rpc/commit/8e2641ed5d1c27830744124670a6a11fc0d96f99))
+* **deps:** bump yaml from 2.9.0 to 2.9.1 ([#671](https://github.com/freakyfelt/yet-another-json-rpc/issues/671)) ([2d89c4a](https://github.com/freakyfelt/yet-another-json-rpc/commit/2d89c4a294695456a8670d36b30e27a07a3e6b21))
+
 ## [3.0.0](https://github.com/freakyfelt/yet-another-json-rpc/compare/v2.0.2...v3.0.0) (2026-11-02)
 
 
