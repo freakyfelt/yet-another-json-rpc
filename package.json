@@ -73,7 +73,7 @@
     "tsx": "^4.23.15",
     "tsdown": "^0.23.4",
     "type-fest": "^5.10.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.72.1"
   },
   "lint-staged": {
