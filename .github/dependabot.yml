@@ -16,6 +16,9 @@ updates:
     ignore:
       - dependency-name: "@types/node"
         versions: ">=23.0.0"
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
     groups:
       eslint:
         patterns:
@@ -24,6 +27,14 @@ updates:
           - "@eslint/*"
           - "typescript-eslint"
           - "@typescript-eslint/*"
+        dependency-type: "development"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@tsconfig/node*"
+        update-types:
+          - "minor"
+          - "patch"
         dependency-type: "development"
       development:
         patterns:
