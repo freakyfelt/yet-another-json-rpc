@@ -26,6 +26,8 @@ updates:
           - "@typescript-eslint/*"
         dependency-type: "development"
       development:
+        patterns:
+          - "*"
         dependency-type: "development"
     commit-message:
       prefix: fix
