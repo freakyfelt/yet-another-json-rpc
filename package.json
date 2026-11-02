@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=20.17.0"
+    "node": ">=22.18.0"
   },
   "type": "module",
   "bin": {
@@ -62,8 +62,8 @@
     "@arethetypeswrong/core": "^0.18.4",
     "@eslint/js": "^10.0.1",
     "@sinclair/typebox": "^0.34.49",
-    "@tsconfig/node20": "^20.1.9",
-    "@types/node": "^20.19.43",
+    "@tsconfig/node22": "^22.0.6",
+    "@types/node": "^22.20.5",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
     "lint-staged": "^17.0.8",
