@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0](https://github.com/freakyfelt/yet-another-json-rpc/compare/v2.0.2...v3.0.0) (2026-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop Node 20 support ([#674](https://github.com/freakyfelt/yet-another-json-rpc/issues/674))
+
+### Bug Fixes
+
+* **deps:** bump esbuild from 0.28.0 to 0.28.1 ([#655](https://github.com/freakyfelt/yet-another-json-rpc/issues/655)) ([908712b](https://github.com/freakyfelt/yet-another-json-rpc/commit/908712bc2bae887c53cf901625bb5aa96cdf404a))
+* **deps:** bump openapi3-ts from 4.5.0 to 4.6.0 ([#653](https://github.com/freakyfelt/yet-another-json-rpc/issues/653)) ([ac8d0c0](https://github.com/freakyfelt/yet-another-json-rpc/commit/ac8d0c0aa97fd915a42e7eff3840259a74f45472))
+* **deps:** bump openapi3-ts from 4.6.0 to 4.6.1 ([#664](https://github.com/freakyfelt/yet-another-json-rpc/issues/664)) ([44ff20f](https://github.com/freakyfelt/yet-another-json-rpc/commit/44ff20f8cf275da61e76a6f6fec16b995ace6318))
+* **deps:** bump yaml from 2.8.3 to 2.8.4 ([#647](https://github.com/freakyfelt/yet-another-json-rpc/issues/647)) ([0311b20](https://github.com/freakyfelt/yet-another-json-rpc/commit/0311b201fd26c7dad2bea9c6965cce8f440d79e9))
+* **deps:** bump yaml from 2.8.4 to 2.9.0 ([#649](https://github.com/freakyfelt/yet-another-json-rpc/issues/649)) ([c718ed0](https://github.com/freakyfelt/yet-another-json-rpc/commit/c718ed0ed398433548a55222f8e467fd9cd497c8))
+* drop Node 20 support ([#674](https://github.com/freakyfelt/yet-another-json-rpc/issues/674)) ([19a8d31](https://github.com/freakyfelt/yet-another-json-rpc/commit/19a8d318c6e6f2205acbe8e648b5cb8cebb0ceda))
+
 ## [2.0.2](https://github.com/freakyfelt/yet-another-json-rpc/compare/v2.0.1...v2.0.2) (2026-04-26)
 
 
